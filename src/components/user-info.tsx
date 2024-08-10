@@ -21,6 +21,7 @@ const UserInfo = () => {
   return (
     <View>
       <Text>{session?.user.email}</Text>
+      <Text>{session?.user.user_metadata.display_name}</Text>
       <Button
         onPress={() => logoutHandler()}
         disabled={isLoading}

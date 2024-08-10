@@ -1,11 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, TouchableOpacity, Pressable, Text} from 'react-native';
+import {View, TouchableOpacity, Pressable, Text, Alert} from 'react-native';
 import {TextInput, Button, HelperText} from 'react-native-paper';
 import styled from 'styled-components/native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {validateEmail, validatePassword, validateUsername} from '../lib/helper';
 import {screenNames} from '../constants';
 import {StyledButton} from '../style';
+import {supabase} from '../lib/supabase';
 
 // @ts-ignore
 const SignUpScreen = ({navigation}) => {
@@ -19,6 +20,7 @@ const SignUpScreen = ({navigation}) => {
   const [emailValid, setEmailValid] = useState(false);
   const [passwordValid, setPasswordValid] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   // Validation functions
 
   // Check validation and update states
@@ -30,11 +32,28 @@ const SignUpScreen = ({navigation}) => {
     setIsFormValid(usernameValid && emailValid && passwordValid);
   }, [username, email, password, usernameValid, emailValid, passwordValid]);
 
-  const handleSignup = () => {
-    // Handle the signup logic here
-    console.log('Username:', username);
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const signUpWithEmail = async () => {
+    try {
+      const {
+        data: {session},
+        error,
+      } = await supabase.auth.signUp({
+        email: email,
+        password: password,
+
+        options: {
+          data: {
+            display_name: username,
+          },
+        },
+      });
+
+      if (error) Alert.alert(error.message);
+      console.log('session', session);
+    } catch (err) {
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const clickSignIn = () => {
@@ -93,9 +112,9 @@ const SignUpScreen = ({navigation}) => {
       </InputWrapper>
       <StyledButton
         mode="contained"
-        onPress={handleSignup}
-        disabled={!isFormValid}>
-        Signup
+        onPress={signUpWithEmail}
+        disabled={!isFormValid || isLoading}>
+        {isLoading ? 'Loading ...' : ' Signup'}
       </StyledButton>
       <SimpleWrapper>
         <Text>Already have an account ?</Text>
