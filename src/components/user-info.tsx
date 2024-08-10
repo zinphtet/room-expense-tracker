@@ -2,6 +2,7 @@ import {Alert, Button, Text, View} from 'react-native';
 import useGetSession from '../hooks/getSession';
 import {supabase} from '../lib/supabase';
 import {useState} from 'react';
+import ConfirmDialog from './dialog';
 
 const UserInfo = () => {
   const [isLoading, setLoading] = useState(false);
@@ -22,11 +23,15 @@ const UserInfo = () => {
     <View>
       <Text>{session?.user.email}</Text>
       <Text>{session?.user.user_metadata.display_name}</Text>
+
       <Button
         onPress={() => logoutHandler()}
         disabled={isLoading}
         title={isLoading ? 'Loading ...' : 'Logout'}
       />
+
+      <Text>Hello</Text>
+      <ConfirmDialog />
     </View>
   );
 };

@@ -1,8 +1,5 @@
 import 'react-native-url-polyfill/auto';
-import {useState, useEffect} from 'react';
-import {supabase} from './src/lib/supabase';
 import {screenNames} from './src/constants';
-import {Session} from '@supabase/supabase-js';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import LoginScreen from './src/screens/login';
