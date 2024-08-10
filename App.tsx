@@ -1,118 +1,69 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+import 'react-native-url-polyfill/auto';
+import {useState, useEffect} from 'react';
+import {supabase} from './src/lib/supabase';
+import {screenNames} from './src/constants';
+import {Session} from '@supabase/supabase-js';
+import {NavigationContainer} from '@react-navigation/native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import LoginScreen from './src/screens/login';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import SignUpScreen from './src/screens/signup';
+import useGetSession from './src/hooks/getSession';
+import HomeScreen from './src/screens/home';
+import RoomScreen from './src/screens/room';
+import ProfileScreen from './src/screens/profile';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {colors} from './src/constants/colors';
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+// const Stack = createS
+export default function App() {
+  const {session} = useGetSession();
+  const isLoggedIn = session?.user;
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+    <NavigationContainer>
+      {!isLoggedIn && (
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+          <Stack.Screen name={screenNames.login} component={LoginScreen} />
+          <Stack.Screen name={screenNames.signup} component={SignUpScreen} />
+        </Stack.Navigator>
+      )}
+      {isLoggedIn && (
+        <Tab.Navigator
+          screenOptions={({route}) => ({
+            tabBarIcon: ({focused, color, size}) => {
+              let iconName;
+
+              if (route.name === screenNames.home) {
+                iconName = focused ? 'home' : 'home-outline';
+              } else if (route.name === screenNames.room) {
+                iconName = focused ? 'account-group' : 'account-group-outline';
+              } else if (route.name === screenNames.profile) {
+                iconName = focused
+                  ? 'account-settings'
+                  : 'account-settings-outline';
+              }
+
+              // You can return any component that you like here!
+              return <Icon name={iconName!} size={30} color={color} />;
+            },
+            tabBarActiveTintColor: colors.primaryColor,
+            tabBarInactiveTintColor: 'gray',
+            headerShown: false,
+            tabBarStyle: {
+              paddingTop: 10,
+              paddingBottom: 10,
+            },
+            tabBarShowLabel: false,
+          })}>
+          <Tab.Screen name={screenNames.home} component={HomeScreen} />
+          <Tab.Screen name={screenNames.room} component={RoomScreen} />
+          <Tab.Screen name={screenNames.profile} component={ProfileScreen} />
+        </Tab.Navigator>
+      )}
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
-
-export default App;
