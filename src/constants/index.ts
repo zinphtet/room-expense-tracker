@@ -4,4 +4,6 @@ export const screenNames = {
   home: 'home',
   room: 'room',
   profile: 'profile',
+  create_new_room: 'Create New Room',
+  room_info: 'Room Information',
 };
