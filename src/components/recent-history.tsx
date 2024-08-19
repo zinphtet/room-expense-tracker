@@ -76,7 +76,7 @@ const RecentHistory = () => {
           <Text>Error fetching recent history</Text>
         </View>
       )}
-      {Expenses.length === 0 && <Text>No Recent History</Text>}
+      {Expenses?.length === 0 && <Text>No Recent History</Text>}
 
       <ScrollView>
         <FlatList

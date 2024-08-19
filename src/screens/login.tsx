@@ -32,7 +32,7 @@ const LoginScreen = ({navigation}) => {
       if (error) {
         Alert.alert(error.message);
       }
-      console.log("Logged In Successfully")
+      // console.log("Logged In Successfully")
     } catch {
     } finally {
       setIsLoading(false);

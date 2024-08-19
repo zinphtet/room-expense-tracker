@@ -1,5 +1,3 @@
-import {View} from 'react-native';
-import {Text} from 'react-native-paper';
 import {Container} from '../../style';
 import CreateRoomForm from '../../components/create-room-form';
 

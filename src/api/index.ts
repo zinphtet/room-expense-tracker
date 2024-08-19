@@ -1,4 +1,5 @@
 import {supabase} from '../lib/supabase';
+import {useRoomStore} from '../store/room';
 
 const RecentHistoryLimit = 5;
 
@@ -57,5 +58,13 @@ export const getRoom = async (userId: string) => {
     .from('roomMembers')
     .select(`id,room(*)`)
     .eq('user_id', userId);
+  return {data, error};
+};
+
+export const getCategoriesByRoomId = async (roomId: string) => {
+  let {data, error} = await supabase
+    .from('category')
+    .select('id,name,created_user_id')
+    .eq('room_id', roomId);
   return {data, error};
 };

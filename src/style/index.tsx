@@ -20,11 +20,12 @@ export const WhiteText = styled(Text)`
   color: #fff;
 `;
 
-export const FlexCenter = styled.View`
+export const FlexCenter = styled.View<{gap?: number}>`
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  gap: ${props => props.gap || 0}px;
 `;
 
 export const SubTitleText = styled.Text`
@@ -52,12 +53,14 @@ export const CenterContainer = styled.View<CenterProps>`
 type ContainerProps = {
   horizontal?: number;
   vertical?: number;
+  gap?: number;
 };
 export const Container = styled.View<ContainerProps>`
   padding-left: ${props => props.horizontal}px;
   padding-right: ${props => props.horizontal}px;
   padding-top: ${props => props.vertical}px;
   padding-bottom: ${props => props.vertical}px;
+  gap: ${props => props.gap || 0}px;
 `;
 
 export const FormContainer = styled.View`
@@ -68,4 +71,13 @@ export const FormContainer = styled.View`
 
 export const ErrorText = styled.Text`
   color: red;
+`;
+
+type ItemSeparatorProps = {
+  width?: number;
+  height?: number;
+};
+export const ItemSeparator = styled.View<ItemSeparatorProps>`
+  height: ${props => props.height}px;
+  width: ${props => props.width}px;
 `;

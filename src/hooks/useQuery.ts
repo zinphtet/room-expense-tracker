@@ -3,11 +3,13 @@ import keys from '../constants/query-keys';
 import {
   addMemberToRoom,
   createNewRoom,
+  getCategoriesByRoomId,
   getRecentExpenes,
   getRoom,
   updateUserInfo,
 } from '../api';
 import {useUserStore} from '../store/user';
+import {useRoomStore} from '../store/room';
 
 export const useGetRecentExpenses = () => {
   const {user} = useUserStore();
@@ -56,4 +58,14 @@ export const useGetRoom = () => {
   });
   console.log('USE GET ROOM DATA', JSON.stringify(data, null, 2));
   return {data, isError, isLoading, isFetching};
+};
+
+export const useGetCategoriesByRoom = () => {
+  const room = useRoomStore(state => state.room);
+  const {isError, data, isLoading} = useQuery({
+    queryKey: [keys.room_categories],
+    queryFn: () => getCategoriesByRoomId(room?.room.id!),
+  });
+
+  return {isLoading, isError, data};
 };

@@ -35,3 +35,21 @@ type AddMemberInputType = {
   user_id: string;
   room_id: string;
 };
+
+type RoomType = {
+  id: string;
+  room: {
+    id: string;
+    name: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+    created_user_id: string;
+  };
+};
+
+type CategoryType = {
+  id: string;
+  name: string;
+  created_user_id: string;
+};

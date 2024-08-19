@@ -6,4 +6,6 @@ export const screenNames = {
   profile: 'profile',
   create_new_room: 'Create New Room',
   room_info: 'Room Information',
+  room_expense_form: 'Expense Form',
+  add_room_category: 'Categories',
 };
