@@ -2,7 +2,6 @@ import {Alert, Button, Text, View} from 'react-native';
 import useGetSession from '../hooks/getSession';
 import {supabase} from '../lib/supabase';
 import {useState} from 'react';
-import ConfirmDialog from './dialog';
 
 const UserInfo = () => {
   const [isLoading, setLoading] = useState(false);
@@ -31,7 +30,6 @@ const UserInfo = () => {
       />
 
       <Text>Hello</Text>
-      <ConfirmDialog />
     </View>
   );
 };

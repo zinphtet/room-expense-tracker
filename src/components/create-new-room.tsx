@@ -12,7 +12,7 @@ const CreateNewRoomModal = () => {
     padding: 20,
     margin: 20,
     top: 0,
-    height: height - 400,
+    height: 400,
   };
 
   return (

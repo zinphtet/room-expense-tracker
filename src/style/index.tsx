@@ -81,3 +81,9 @@ export const ItemSeparator = styled.View<ItemSeparatorProps>`
   height: ${props => props.height}px;
   width: ${props => props.width}px;
 `;
+
+
+export const ButtonContainer = styled.View`
+  display: flex;
+  align-items: flex-end;
+`;

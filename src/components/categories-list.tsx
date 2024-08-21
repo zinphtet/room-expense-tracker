@@ -1,15 +1,33 @@
-import {FlatList, Pressable, Text, View} from 'react-native';
-import {useGetCategoriesByRoom} from '../hooks/useQuery';
+import {Alert, FlatList, Pressable, Text, View} from 'react-native';
+import {useDeleteCategory, useGetCategoriesByRoom} from '../hooks/useQuery';
 import styled from 'styled-components/native';
 import {FlexCenter, ItemSeparator} from '../style';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../constants/theme';
-const CategoryItem: React.FC<CategoryType> = ({name}) => {
+import {useState} from 'react';
+import ConfirmDialog from './confirm-modal';
+
+const CategoryItem: React.FC<CategoryType> = ({name, id}) => {
+  const {isError, isPending, mutate: deleteCategory} = useDeleteCategory(id);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const isLoading = isPending;
+  const closeConfirmDialog = () => {
+    setShowConfirmDialog(false);
+  };
+  const showConfirmDialogHandler = () => {
+    setShowConfirmDialog(true);
+  };
   return (
     <CategoryItemContainer>
+      <ConfirmDialog
+        show={showConfirmDialog}
+        isLoading={isLoading}
+        closeFn={closeConfirmDialog}
+        asyncFn={async () => {}}
+      />
       <FlexCenter>
         <Text>{name}</Text>
-        <FlexCenter gap={10}>
+        <FlexCenter gap={20}>
           <Pressable>
             <Material
               name="square-edit-outline"
@@ -17,7 +35,7 @@ const CategoryItem: React.FC<CategoryType> = ({name}) => {
               color={theme.colors.primary}
             />
           </Pressable>
-          <Pressable>
+          <Pressable onPress={showConfirmDialogHandler}>
             <Material
               name="delete-circle-outline"
               size={25}

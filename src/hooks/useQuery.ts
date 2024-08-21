@@ -2,7 +2,9 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import keys from '../constants/query-keys';
 import {
   addMemberToRoom,
+  createCategory,
   createNewRoom,
+  deleteCategory,
   getCategoriesByRoomId,
   getRecentExpenes,
   getRoom,
@@ -68,4 +70,18 @@ export const useGetCategoriesByRoom = () => {
   });
 
   return {isLoading, isError, data};
+};
+
+export const useCreateCategory = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: createCategory,
+  });
+  return {isError, isPending, mutate};
+};
+
+export const useDeleteCategory = (id: string) => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: () => deleteCategory(id),
+  });
+  return {isError, isPending, mutate};
 };

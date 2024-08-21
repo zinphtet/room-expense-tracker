@@ -53,3 +53,8 @@ type CategoryType = {
   name: string;
   created_user_id: string;
 };
+
+type CreateCategroyInputType = {
+  name: string;
+  roomId: string;
+};

@@ -3,7 +3,7 @@ import {Alert, View} from 'react-native';
 import {Button, Text, TextInput} from 'react-native-paper';
 import {useForm} from 'react-hook-form';
 import styled from 'styled-components/native';
-import {ErrorText, FormContainer} from '../style';
+import {ButtonContainer, ErrorText, FormContainer} from '../style';
 import {
   useAddMemberToRoom,
   useCreateForm,
@@ -78,8 +78,3 @@ const CreateRoomForm = () => {
   );
 };
 export default CreateRoomForm;
-
-const ButtonContainer = styled.View`
-  display: flex;
-  align-items: flex-end;
-`;

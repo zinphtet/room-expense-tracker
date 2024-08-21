@@ -68,3 +68,18 @@ export const getCategoriesByRoomId = async (roomId: string) => {
     .eq('room_id', roomId);
   return {data, error};
 };
+
+export const createCategory = async (inputObj: CreateCategroyInputType) => {
+  const {data, error} = await supabase
+    .from('category')
+    .insert([{name: inputObj.name, room_id: inputObj.roomId}])
+    .select('id,name,created_user_id');
+
+  return {data, error};
+};
+
+export const deleteCategory = async (id: string) => {
+  const {error} = await supabase.from('category').delete().eq('id', id);
+
+  return {error};
+};
