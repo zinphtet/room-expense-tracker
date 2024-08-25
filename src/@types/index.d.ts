@@ -58,3 +58,8 @@ type CreateCategroyInputType = {
   name: string;
   roomId: string;
 };
+
+type UpdateCategoryInputType = {
+  name: string;
+  id: string;
+};

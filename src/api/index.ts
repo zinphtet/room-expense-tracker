@@ -83,3 +83,13 @@ export const deleteCategory = async (id: string) => {
 
   return {error};
 };
+
+export const updateCategory = async (inputObj: UpdateCategoryInputType) => {
+  const {data, error} = await supabase
+    .from('category')
+    .update({name: inputObj.name})
+    .eq('id', inputObj.id)
+    .select();
+
+  return {data, error};
+};

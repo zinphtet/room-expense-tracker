@@ -1,10 +1,12 @@
 import {View} from 'react-native';
 import Modal from 'react-native-modal';
 import {Button, Text} from 'react-native-paper';
+import {FlexCenter} from '../style';
+import styled from 'styled-components/native';
 
 type ConfirmDialogProps = {
   show: boolean;
-  asyncFn: () => Promise<void>;
+  asyncFn: () => void;
   isLoading: boolean;
   closeFn: () => void;
 };
@@ -27,22 +29,41 @@ const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           borderRadius: 20,
           padding: 20,
           paddingTop: 20,
-          paddingBottom: 40,
+          paddingBottom: 20,
           alignContent: 'center',
           justifyContent: 'center',
           position: 'relative',
+          gap: 20,
         }}>
-        <Text variant="labelLarge">Hello WOrld</Text>
-        <Text>Are you sure you want to delete this item</Text>
-        <Button onPress={closeFn} mode="outlined" disabled={isLoading}>
-          No
-        </Button>
-        <Button onPress={asyncFn} mode="contained" disabled={isLoading}>
-          Yes
-        </Button>
+        <TextCenter> Delete ?</TextCenter>
+        <TextCenter>Are you sure you want to delete this item</TextCenter>
+        <CetnerItem>
+          <Button onPress={closeFn} mode="outlined" disabled={isLoading}>
+            No
+          </Button>
+          <Button onPress={asyncFn} mode="contained" disabled={isLoading}>
+            Yes
+          </Button>
+        </CetnerItem>
       </View>
     </Modal>
   );
 };
 
 export default ConfirmDialog;
+
+export const CetnerItem = styled.View`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 30px;
+`;
+
+type Props = {
+  size?: number;
+};
+export const TextCenter = styled.Text<Props>`
+  text-align: center;
+  /* font-size: ${props => props.size}px; */
+`;

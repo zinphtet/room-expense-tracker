@@ -28,8 +28,8 @@ const RoomMenus: React.FC<ScreenProps> = ({navigation}) => {
     <RoomMenusContainer>
       {Menus.map(mu => {
         return (
-          <Pressable onPress={() => navigation.push(mu.to || '')}>
-            <MenuIconContainer key={mu.name}>
+          <Pressable key={mu.name} onPress={() => navigation.push(mu.to || '')}>
+            <MenuIconContainer>
               <Material name={mu.name} size={30} />
             </MenuIconContainer>
           </Pressable>

@@ -8,6 +8,7 @@ import {
   getCategoriesByRoomId,
   getRecentExpenes,
   getRoom,
+  updateCategory,
   updateUserInfo,
 } from '../api';
 import {useUserStore} from '../store/user';
@@ -82,6 +83,13 @@ export const useCreateCategory = () => {
 export const useDeleteCategory = (id: string) => {
   const {isError, isPending, mutate} = useMutation({
     mutationFn: () => deleteCategory(id),
+  });
+  return {isError, isPending, mutate};
+};
+
+export const useUpdateCategory = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: updateCategory,
   });
   return {isError, isPending, mutate};
 };

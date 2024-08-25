@@ -1,7 +1,7 @@
 import {Text} from 'react-native-paper';
 import {Container} from '../../style';
 import CategoryLists from '../../components/categories-list';
-import CreateCategoryForm from '../../components/create-category';
+import CreateCategoryForm from '../../components/category-form';
 
 const RoomCategories = () => {
   return (

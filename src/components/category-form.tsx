@@ -8,15 +8,22 @@ import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../constants/theme';
 import styled from 'styled-components/native';
 import {useRoomStore} from '../store/room';
-import {useCreateCategory} from '../hooks/useQuery';
+import {useCreateCategory, useUpdateCategory} from '../hooks/useQuery';
 import {useToast} from 'react-native-toast-notifications';
 import {useQueryClient} from '@tanstack/react-query';
-const CategoryCreateForm = () => {
+
+type FormProps = {
+  isUpdate?: boolean;
+  updateObject?: UpdateCategoryInputType;
+};
+const CategoryCreateForm: React.FC<FormProps> = ({isUpdate, updateObject}) => {
   const [showModal, setShowModal] = useState(false);
   const room = useRoomStore(state => state.room);
   const {isPending, isError, mutate: createCategory} = useCreateCategory();
+  const {isPending: isUpdating, mutate: updateCategory} = useUpdateCategory();
   const toast = useToast();
   const queryClinet = useQueryClient();
+  console.log('udpateOBje', JSON.stringify(updateObject, null, 2));
   const {
     control,
     handleSubmit,
@@ -34,6 +41,30 @@ const CategoryCreateForm = () => {
     setShowModal(false);
   };
   const submitHandler = (data: {name: string}) => {
+    if (isUpdate) {
+      updateCategory(
+        {
+          id: updateObject?.id!,
+          name: data.name,
+        },
+        {
+          onSuccess: () => {
+            setValue('name', '');
+            closeModalHandler();
+            toast.show('Updated successfully', {
+              type: 'success',
+            });
+            queryClinet.invalidateQueries();
+          },
+          onError: () => {
+            toast.show('Error updating !', {
+              type: 'warning',
+            });
+          },
+        },
+      );
+      return;
+    }
     createCategory(
       {
         roomId: room?.room.id!,
@@ -59,9 +90,20 @@ const CategoryCreateForm = () => {
   return (
     <View>
       <CenterContainer>
-        <Button mode="contained" icon={'plus'} onPress={showModalHandler}>
-          Add category
-        </Button>
+        {isUpdate && (
+          <Pressable onPress={showModalHandler}>
+            <Material
+              name="square-edit-outline"
+              size={25}
+              color={theme.colors.primary}
+            />
+          </Pressable>
+        )}
+        {!isUpdate && (
+          <Button mode="contained" icon={'plus'} onPress={showModalHandler}>
+            Add category
+          </Button>
+        )}
       </CenterContainer>
       <Modal
         isVisible={showModal}
@@ -92,6 +134,7 @@ const CategoryCreateForm = () => {
             <Controller
               name="name"
               control={control}
+              defaultValue={updateObject?.name}
               rules={{
                 required: 'Category name is required',
                 minLength: {
@@ -117,10 +160,10 @@ const CategoryCreateForm = () => {
             )}
             <ButtonContainer>
               <Button
-                disabled={isPending}
+                disabled={isPending || isUpdating}
                 onPress={handleSubmit(submitHandler)}
                 mode="contained">
-                {isPending ? 'Saving ...' : 'Save'}
+                {isPending || isUpdating ? 'Saving ...' : 'Save'}
               </Button>
             </ButtonContainer>
           </Container>
