@@ -7,7 +7,7 @@ import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons'
 const RoomCard: React.FC<RoomType> = room => {
   return (
     <CardContainer>
-      <RoomName>{room.room.name}</RoomName>
+      <RoomName>{room?.room?.name}</RoomName>
       <RoomInfo>
         <FlexCenter>
           <AntDesign name="pluscircleo" size={25} color={'#fff'} />

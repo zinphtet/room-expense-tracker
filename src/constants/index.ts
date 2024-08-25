@@ -8,4 +8,6 @@ export const screenNames = {
   room_info: 'Room Information',
   room_expense_form: 'Expense Form',
   add_room_category: 'Categories',
+  members: 'Room Members',
+  add_new_member: 'Add New Member',
 };

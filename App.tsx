@@ -38,7 +38,10 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <PaperProvider theme={customTheme}>
           <SafeAreaProvider>
-            <ToastProvider>
+            <ToastProvider
+              placement="top"
+              duration={1000}
+              animationType="slide-in">
               <NavigationContainer>
                 {!isLoggedIn && (
                   <Stack.Navigator

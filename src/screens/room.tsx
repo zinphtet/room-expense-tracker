@@ -8,6 +8,8 @@ import CreateNewRoomScreen from './room/create-new-room';
 import RoomInfoScreen from './room/room-info';
 import RoomExpenseForm from './room/room-expense-form';
 import RoomCategories from './room/room-categories';
+import Members from './room/members';
+import AddNewMemberScreen from './room/add-new-member';
 
 const Stack = createNativeStackNavigator();
 const RoomScreen = () => {
@@ -25,9 +27,15 @@ const RoomScreen = () => {
         component={CreateNewRoomScreen}
       />
       <Stack.Screen
+        name={screenNames.add_new_member}
+        component={AddNewMemberScreen}
+      />
+
+      <Stack.Screen
         name={screenNames.room_expense_form}
         component={RoomExpenseForm}
       />
+      <Stack.Screen name={screenNames.members} component={Members} />
       <Stack.Screen
         name={screenNames.add_room_category}
         component={RoomCategories}

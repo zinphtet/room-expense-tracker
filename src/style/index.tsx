@@ -87,3 +87,8 @@ export const ButtonContainer = styled.View`
   display: flex;
   align-items: flex-end;
 `;
+
+export const TextBold = styled.Text`
+   font-weight: bold;
+   font-size: 20px;
+`

@@ -23,6 +23,7 @@ const CategoryItem: React.FC<CategoryType> = ({name, id}) => {
     setShowConfirmDialog(true);
   };
   const deleteCategoryHanlder = (id: string) => {
+    // @ts-ignore
     deleteCategory(id, {
       onSuccess: () => {
         closeConfirmDialog();

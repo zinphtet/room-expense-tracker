@@ -63,3 +63,19 @@ type UpdateCategoryInputType = {
   name: string;
   id: string;
 };
+
+type UserID = {
+  user_id: string;
+};
+
+type Member = {
+  id: string;
+  email: string;
+  name: string;
+  room_id: string | null;
+};
+
+type UserIdRoomId = {
+  room_id: string;
+  user_id: string;
+};

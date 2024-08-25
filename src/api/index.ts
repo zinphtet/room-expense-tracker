@@ -1,5 +1,4 @@
 import {supabase} from '../lib/supabase';
-import {useRoomStore} from '../store/room';
 
 const RecentHistoryLimit = 5;
 
@@ -45,19 +44,27 @@ export const updateUserInfo = async ({
 };
 
 export const addMemberToRoom = async (inputObj: AddMemberInputType) => {
+  // const {data, error} = await supabase
+  //   .from('roomMembers')
+  //   .insert([inputObj])
+  //   .select('*');
   const {data, error} = await supabase
-    .from('roomMembers')
-    .insert([inputObj])
+    .from('users')
+    .update({room_id: inputObj.room_id})
+    .eq('id', inputObj.user_id)
     .select('*');
-
   return {data, error};
 };
 
 export const getRoom = async (userId: string) => {
+  // let {data, error} = await supabase
+  //   .from('roomMembers')
+  //   .select(`id,room(*)`)
+  //   .eq('user_id', userId);
   let {data, error} = await supabase
-    .from('roomMembers')
+    .from('users')
     .select(`id,room(*)`)
-    .eq('user_id', userId);
+    .eq('id', userId);
   return {data, error};
 };
 
@@ -91,5 +98,37 @@ export const updateCategory = async (inputObj: UpdateCategoryInputType) => {
     .eq('id', inputObj.id)
     .select();
 
+  return {data, error};
+};
+
+export const getMembersByRoomId = async (id: string) => {
+  let {data, error} = await supabase
+    .from('users')
+    .select('*')
+    .eq('room_id', id);
+
+  return {data, error};
+};
+
+export const getUsersById = async (id: string) => {
+  const {data, error} = await supabase.from('users').select('*').eq('id', id);
+
+  return {data, error};
+};
+
+export const searchUsersByName = async (name: string) => {
+  let {data, error} = await supabase
+    .from('users')
+    .select(`*`)
+    .ilike('name', `%${name}%`);
+  return {data, error};
+};
+
+export const removeUserFromRoom = async (userId: string) => {
+  const {data, error} = await supabase
+    .from('users')
+    .update({room_id: null})
+    .eq('id', userId)
+    .select();
   return {data, error};
 };

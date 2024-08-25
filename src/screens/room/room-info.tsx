@@ -23,7 +23,7 @@ const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
   }, [room]);
   return (
     <RoomViewContainer>
-      {!isLoading && !room && (
+      {!isLoading && !room?.room && (
         <CenterContainer top={60} bottom={30}>
           {/* <CreateNewRoomModal /> */}
           <Button icon={'plus'} onPress={createNewRoomHandler} mode="contained">
@@ -31,7 +31,7 @@ const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
           </Button>
         </CenterContainer>
       )}
-      {room && (
+      {room?.room && (
         <Container vertical={20} horizontal={20} gap={40}>
           {/* <Text>{JSON.stringify(room, null, 2)}</Text> */}
           {/* @ts-ignore */}

@@ -10,13 +10,14 @@ const Menus = [
   },
   {
     name: 'account-group',
+    to: screenNames.members,
   },
   {
     name: 'speaker-wireless',
   },
-  {
-    name: 'account-plus-outline',
-  },
+  // {
+  //   name: 'account-plus-outline',
+  // },
   {
     name: 'card-plus-outline',
     to: screenNames.add_room_category,

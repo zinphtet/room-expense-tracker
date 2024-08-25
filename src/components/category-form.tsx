@@ -53,6 +53,7 @@ const CategoryCreateForm: React.FC<FormProps> = ({isUpdate, updateObject}) => {
             closeModalHandler();
             toast.show('Updated successfully', {
               type: 'success',
+              placement: 'top',
             });
             queryClinet.invalidateQueries();
           },
@@ -76,6 +77,7 @@ const CategoryCreateForm: React.FC<FormProps> = ({isUpdate, updateObject}) => {
           closeModalHandler();
           toast.show('Create successfully', {
             type: 'success',
+            placement : 'top'
           });
           queryClinet.invalidateQueries();
         },

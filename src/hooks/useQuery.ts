@@ -6,8 +6,11 @@ import {
   createNewRoom,
   deleteCategory,
   getCategoriesByRoomId,
+  getMembersByRoomId,
   getRecentExpenes,
   getRoom,
+  getUsersById,
+  removeUserFromRoom,
   updateCategory,
   updateUserInfo,
 } from '../api';
@@ -92,4 +95,29 @@ export const useUpdateCategory = () => {
     mutationFn: updateCategory,
   });
   return {isError, isPending, mutate};
+};
+
+export const useMembersByRoom = () => {
+  const room = useRoomStore(state => state.room);
+  const {data, isError, isLoading} = useQuery({
+    queryFn: () => getMembersByRoomId(room?.room.id!),
+    queryKey: [keys.room_members],
+  });
+
+  return {isError, isLoading, data};
+};
+
+export const useGetUserById = (id: string) => {
+  const {data, isError, isLoading} = useQuery({
+    queryFn: () => getUsersById(id),
+    queryKey: [keys.user, id],
+  });
+  return {isError, isLoading, data};
+};
+
+export const useRemoveUserFromRoom = () => {
+  const {data, isError, isPending, mutate} = useMutation({
+    mutationFn: removeUserFromRoom,
+  });
+  return {isError, isPending, data, mutate};
 };
