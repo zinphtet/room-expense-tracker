@@ -132,3 +132,44 @@ export const removeUserFromRoom = async (userId: string) => {
     .select();
   return {data, error};
 };
+
+export const createMonth = async (createObj: CreateMonthType) => {
+  const {data, error} = await supabase
+    .from('month')
+    .insert([createObj])
+    .select();
+
+  return {data, error};
+};
+
+export const updateMonth = async (updateObj: UpdateMonthType) => {
+  const {data, error} = await supabase
+    .from('month')
+    .update(updateObj.data)
+    .eq('id', updateObj.id)
+    .select();
+
+  return {data, error};
+};
+
+export const deleteMonth = async (id: string) => {
+  const {error} = await supabase.from('month').delete().eq('id', id);
+  return {error};
+};
+
+export const getMonthsByRoom = async (roomId: string) => {
+  let {data, error} = await supabase
+    .from('month')
+    .select('*')
+    .eq('room_id', roomId);
+
+  return {data, error};
+};
+
+export const getActiveMonth = async () => {
+  let {data, error} = await supabase
+    .from('month')
+    .select('*')
+    .eq('is_active', true);
+  return {data, error};
+};

@@ -4,7 +4,10 @@ import theme from '../constants/theme';
 import {FlexCenter, WhiteText} from '../style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useGetActiveMonth} from '../hooks/useQuery';
 const RoomCard: React.FC<RoomType> = room => {
+  const {isError, isLoading, data} = useGetActiveMonth();
+  const activeMonth = data?.data![0] as unknown as MonthType;
   return (
     <CardContainer>
       <RoomName>{room?.room?.name}</RoomName>
@@ -23,7 +26,7 @@ const RoomCard: React.FC<RoomType> = room => {
             size={30}
             color={'#fff'}
           />
-          <Money>August</Money>
+          <Money>{activeMonth.name}</Money>
         </FlexCenter>
       </RoomInfo>
     </CardContainer>

@@ -39,6 +39,11 @@ const AddNewMemberScreen = () => {
           <TextCenter>Loading ...</TextCenter>
         </Container>
       )}
+      {data?.length === 0 && (
+        <Container vertical={20}>
+          <TextCenter>No users with this name</TextCenter>
+        </Container>
+      )}
       {!isFetching && (
         <FlatList
           data={data}

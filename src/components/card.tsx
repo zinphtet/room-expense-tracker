@@ -3,8 +3,10 @@ import styled from 'styled-components/native';
 import {Card, Text, Divider} from 'react-native-paper';
 import {WhiteText} from '../style';
 import theme from '../constants/theme';
+import {formatDateOne} from '../lib/helper';
 
 const BalanceCard = () => {
+  const date = new Date();
   return (
     <StyledCard>
       <Card.Content>
@@ -16,11 +18,13 @@ const BalanceCard = () => {
         <IncomeExpenseRow>
           <IncomeColumn>
             <WhiteText variant="labelLarge">Date</WhiteText>
-            <WhiteText variant="titleLarge">August 12 </WhiteText>
+            <WhiteText variant="titleLarge">
+              {formatDateOne(date.toISOString())}
+            </WhiteText>
           </IncomeColumn>
           <ExpenseColumn>
             <WhiteText variant="labelLarge">Limit</WhiteText>
-            <WhiteText variant="titleLarge">284.00 MMK</WhiteText>
+            <WhiteText variant="titleLarge">{date.getUTCMonth()}</WhiteText>
           </ExpenseColumn>
         </IncomeExpenseRow>
       </Card.Content>

@@ -10,4 +10,5 @@ export const screenNames = {
   add_room_category: 'Categories',
   members: 'Room Members',
   add_new_member: 'Add New Member',
+  month: 'Financial Months',
 };

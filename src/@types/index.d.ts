@@ -79,3 +79,31 @@ type UserIdRoomId = {
   room_id: string;
   user_id: string;
 };
+
+type CreateMonthType = {
+  name?: string;
+  description?: string;
+  room_id?: string;
+  is_calculated?: boolean;
+};
+
+type UpdateMonthType = {
+  id: string;
+  data: {
+    name?: string;
+    description?: string;
+    is_calculated?: boolean;
+  };
+};
+
+type MonthType = {
+  id: string;
+  created_at?: string;
+  updated_at?: string;
+  name: string;
+  description: string;
+  is_active: boolean;
+  room_id: string;
+  created_user_id: string;
+  is_calculated: boolean;
+};

@@ -3,15 +3,20 @@ import keys from '../constants/query-keys';
 import {
   addMemberToRoom,
   createCategory,
+  createMonth,
   createNewRoom,
   deleteCategory,
+  deleteMonth,
+  getActiveMonth,
   getCategoriesByRoomId,
   getMembersByRoomId,
+  getMonthsByRoom,
   getRecentExpenes,
   getRoom,
   getUsersById,
   removeUserFromRoom,
   updateCategory,
+  updateMonth,
   updateUserInfo,
 } from '../api';
 import {useUserStore} from '../store/user';
@@ -120,4 +125,42 @@ export const useRemoveUserFromRoom = () => {
     mutationFn: removeUserFromRoom,
   });
   return {isError, isPending, data, mutate};
+};
+
+export const useGetMonthsByRoom = () => {
+  const room = useRoomStore(state => state.room?.room);
+  const {isError, isLoading, data} = useQuery({
+    queryKey: [keys.months],
+    queryFn: () => getMonthsByRoom(room?.id!),
+  });
+  return {isError, isLoading, data};
+};
+
+export const useCreateMonth = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: createMonth,
+  });
+  return {isError, isPending, mutate};
+};
+
+export const useDeleteMonth = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: deleteMonth,
+  });
+  return {isError, isPending, mutate};
+};
+
+export const useUpdateMonth = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: updateMonth,
+  });
+  return {isError, isPending, mutate};
+};
+
+export const useGetActiveMonth = () => {
+  const {isError, isLoading, data} = useQuery({
+    queryKey: [keys.active_month],
+    queryFn: getActiveMonth,
+  });
+  return {isError, isLoading, data};
 };

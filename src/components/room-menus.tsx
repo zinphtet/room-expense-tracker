@@ -13,11 +13,13 @@ const Menus = [
     to: screenNames.members,
   },
   {
+    name: 'shield-moon-outline',
+    to: screenNames.month,
+  },
+  {
     name: 'speaker-wireless',
   },
-  // {
-  //   name: 'account-plus-outline',
-  // },
+
   {
     name: 'card-plus-outline',
     to: screenNames.add_room_category,
