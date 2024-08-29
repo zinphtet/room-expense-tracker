@@ -1,119 +1,129 @@
-import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Button, TextInput, Menu, Provider } from 'react-native-paper';
-import { useForm, Controller } from 'react-hook-form';
-
+import {Controller, useForm} from 'react-hook-form';
+import {Container, FormContainer} from '../../style';
+import {TextInput} from 'react-native-paper';
+import {PaperSelect} from 'react-native-paper-select';
+import {useCallback, useState} from 'react';
+import {DatePickerInput} from 'react-native-paper-dates';
 type FormData = {
-  category: string;
+  categoryId: string;
+  memberIds: string;
+  amount: number;
   description: string;
-  members: string;
+  room_money: boolean;
+  date: Date | undefined;
 };
 
-const MyForm = () => {
-  const { control, handleSubmit, setValue } = useForm<FormData>();
-  const [categoryMenuVisible, setCategoryMenuVisible] = useState(false);
-  const [membersMenuVisible, setMembersMenuVisible] = useState(false);
+const ExpenseForm = () => {
+  const {control, watch} = useForm<FormData>({
+    defaultValues: {
+      date: undefined,
+    },
+  });
+  const [colors, setColors] = useState({
+    value: '',
+    list: [
+      {_id: '1', value: 'BLUE'},
+      {_id: '2', value: 'RED'},
+      {_id: '3', value: 'GREEN'},
+      {_id: '4', value: 'YELLOW'},
+      {_id: '5', value: 'BROWN'},
+      {_id: '6', value: 'BLACK'},
+      {_id: '7', value: 'WHITE'},
+      {_id: '8', value: 'CYAN'},
+    ],
+    selectedList: [],
+    error: '',
+  });
+  const [inputDate, setInputDate] = useState(undefined);
 
-  // Sample Data
-  const categories = ['Health', 'Education', 'Finance'];
-  const membersList = ['John Doe', 'Jane Smith', 'Alice Johnson'];
-
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-  };
+  const mydate = watch('date');
+  console.log('mydate', mydate);
 
   return (
-    <Provider>
-      <View style={{ padding: 16 }}>
-        {/* Select Category Input */}
-        <Controller
-          control={control}
-          name="category"
-          render={({ field: { onBlur, value } }) => (
-            <Menu
-              visible={categoryMenuVisible}
-              onDismiss={() => setCategoryMenuVisible(false)}
-              anchor={
-                <TextInput
-                  label="Select Category"
-                  value={value}
-                  onFocus={() => setCategoryMenuVisible(true)}
-                  onBlur={onBlur}
-                  style={{ marginBottom: 16 }}
-                  editable={false}
-                />
-              }
-            >
-              {categories.map((cat, index) => (
-                <Menu.Item
-                  key={index}
-                  onPress={() => {
-                    setValue('category', cat);
-                    setCategoryMenuVisible(false);
-                  }}
-                  title={cat}
-                />
-              ))}
-            </Menu>
-          )}
-        />
+    <Container horizontal={20} vertical={20} gap={10}>
+      <Controller
+        name="amount"
+        control={control}
+        render={({field}) => {
+          return (
+            <>
+              <TextInput
+                label={'Amonut'}
+                keyboardType="numeric"
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </>
+          );
+        }}
+      />
+      <Controller
+        name="description"
+        control={control}
+        render={({field}) => {
+          return (
+            <>
+              <TextInput
+                label={'Description'}
+                multiline={true}
+                numberOfLines={3}
+                value={field.value}
+                onChange={field.onChange}
+              />
+            </>
+          );
+        }}
+      />
 
-        {/* Description Input */}
-        <Controller
-          control={control}
-          name="description"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              label="Description"
-              value={value}
-              onBlur={onBlur}
-              onChangeText={onChange}
-              style={{ marginBottom: 16 }}
-              multiline
+      <Controller
+        name="categoryId"
+        control={control}
+        render={({field}) => {
+          return (
+            <PaperSelect
+              label="Select Colors"
+              value={colors.value}
+              onSelection={(value: any) => {
+                setColors({
+                  ...colors,
+                  value: value.text,
+                  selectedList: value.selectedList,
+                  error: '',
+                });
+              }}
+              arrayList={[...colors.list]}
+              selectedArrayList={colors.selectedList}
+              errorText={colors.error}
+              multiEnable={true}
+              textInputMode="flat"
+              // searchStyle={{iconColor: 'red'}}
+              // searchPlaceholder="Procurar"
+              // limitError='hrllo'
+              dialogCloseButtonText="Close"
+              dialogDoneButtonText="Add"
             />
-          )}
-        />
+          );
+        }}
+      />
 
-        {/* Select Members Input */}
-        <Controller
-          control={control}
-          name="members"
-          render={({ field: { onBlur, value } }) => (
-            <Menu
-              visible={membersMenuVisible}
-              onDismiss={() => setMembersMenuVisible(false)}
-              anchor={
-                <TextInput
-                  label="Select Members"
-                  value={value}
-                  onFocus={() => setMembersMenuVisible(true)}
-                  onBlur={onBlur}
-                  style={{ marginBottom: 16 }}
-                  editable={false}
-                />
-              }
-            >
-              {membersList.map((member, index) => (
-                <Menu.Item
-                  key={index}
-                  onPress={() => {
-                    setValue('members', member);
-                    setMembersMenuVisible(false);
-                  }}
-                  title={member}
-                />
-              ))}
-            </Menu>
-          )}
-        />
-
-        {/* Submit Button */}
-        <Button mode="contained" onPress={handleSubmit(onSubmit)}>
-          Submit
-        </Button>
-      </View>
-    </Provider>
+      <Controller
+        control={control}
+        name="date"
+        render={({field}) => {
+          return (
+            <DatePickerInput
+              locale="en"
+              style={{marginTop: 20}}
+              label="Expense date"
+              value={field.value}
+              onChange={field.onChange}
+              inputMode="start"
+            />
+          );
+        }}
+      />
+    </Container>
   );
 };
 
-export default MyForm;
+export default ExpenseForm;

@@ -26,7 +26,7 @@ const RoomCard: React.FC<RoomType> = room => {
             size={30}
             color={'#fff'}
           />
-          <Money>{activeMonth.name}</Money>
+          <Money>{activeMonth?.name}</Money>
         </FlexCenter>
       </RoomInfo>
     </CardContainer>
