@@ -11,6 +11,7 @@ import {
   getActiveMonth,
   getAllExpenses,
   getCategoriesByRoomId,
+  getCategoryExpense,
   getMembersByRoomId,
   getMonthsByRoom,
   getRecentExpenes,
@@ -114,14 +115,13 @@ export const useGetMembersByRoom = () => {
   return {isError, isLoading, data};
 };
 
-export const useGetUserById = (ids : string[]) => {
+export const useGetUserById = (ids: string[]) => {
   const {data, isError, isLoading} = useQuery({
     queryFn: () => getUsersById(ids),
     queryKey: [keys.user, JSON.stringify(ids)],
   });
   return {isError, isLoading, data};
 };
-
 
 export const useRemoveUserFromRoom = () => {
   const {data, isError, isPending, mutate} = useMutation({
@@ -179,6 +179,14 @@ export const useGetAllExpenses = () => {
   const {data, isError, isLoading} = useQuery({
     queryKey: [keys],
     queryFn: getAllExpenses,
+  });
+  return {data, isError, isLoading};
+};
+
+export const useGetExpenseByCategory = () => {
+  const {data, isError, isLoading} = useQuery({
+    queryKey: [keys.expenses_cateogry],
+    queryFn: getCategoryExpense,
   });
   return {data, isError, isLoading};
 };

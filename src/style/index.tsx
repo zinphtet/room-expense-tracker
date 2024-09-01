@@ -100,3 +100,7 @@ export const FlexRight = styled.View`
   align-items: flex-end;
   justify-content: flex-end;
 `;
+
+export const TextCenter = styled.Text`
+   text-align: center;
+`

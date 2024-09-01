@@ -143,3 +143,11 @@ type CreateRoomExpenseType = {
   month_id: string;
   member_ids: string;
 };
+
+interface ExpenseCategory {
+  category_id: string; // UUID as a string
+  amount: string;
+  category: {
+    name: string;
+  };
+}

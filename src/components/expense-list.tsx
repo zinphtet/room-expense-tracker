@@ -16,7 +16,7 @@ import {screenNames} from '../constants';
 
 const ExpenseList: React.FC<ScreenProps> = ({navigation}) => {
   const {data, isError, isLoading} = useGetAllExpenses();
-  log(data, 'expense list');
+  //   log(data, 'expense list');
   const detailScreenHandler = (item: any) => {
     navigation.push(screenNames.expense_detail, {expense: item});
   };

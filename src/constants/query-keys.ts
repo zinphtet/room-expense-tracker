@@ -7,6 +7,7 @@ const keys = {
   months: 'get_months_by_room_id',
   active_month: 'active_month',
   expenses: 'expenses',
+  expenses_cateogry: 'expenses_cateogry',
 };
 
 export default keys;

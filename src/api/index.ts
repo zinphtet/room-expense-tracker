@@ -199,3 +199,25 @@ export const getAllExpenses = async () => {
 
   return {data, error};
 };
+
+export const getCategoryExpense = async () => {
+  const {data, error} = await supabase
+    .from('expense')
+    .select('category_id, amount, category(name)');
+
+  if (error) {
+    throw new Error('Error fetching expenses');
+  }
+
+  const grouupByExpId = data.reduce((acc, row) => {
+    if (!acc[row.category_id]) {
+      acc[row.category_id] = [];
+    }
+    acc[row.category_id].push(row);
+    return acc;
+  }, {} as Record<number, typeof data>);
+  const keys = Object.keys(grouupByExpId);
+  log(grouupByExpId, 'expense by category');
+  log(keys, 'expense keys');
+  return {keys, expenseByCategoryId: grouupByExpId};
+};
