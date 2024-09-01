@@ -87,9 +87,12 @@ export const ButtonContainer = styled.View`
   align-items: flex-end;
 `;
 
-export const TextBold = styled.Text`
+type TextBoldProps = {
+  size?: number;
+};
+export const TextBold = styled.Text<TextBoldProps>`
   font-weight: bold;
-  font-size: 20px;
+  font-size: ${props => props.size || 20}px;
 `;
 
 export const FlexRight = styled.View`

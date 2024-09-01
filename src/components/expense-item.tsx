@@ -1,21 +1,20 @@
 import {Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {formatPrice, log} from '../lib/helper';
-import {FlexCenter, FlexRight} from '../style';
+import {FlexCenter, FlexRight, TextBold} from '../style';
 import theme from '../constants/theme';
 
 const ExpenseItem: React.FC<any> = data => {
   const {amount, expense_date} = data;
   const date = new Date(expense_date);
-  log(data, 'expense item');
   return (
     <ExpenseItemContainer>
       <FlexCenter>
-        <Text>{data?.users?.name}</Text>
+        <TextBold size={16}>{data?.users?.name}</TextBold>
         <MoneyStyle isRed={data.is_room_money}>
           {data?.is_room_money ? 'ROOM' : 'OWN'}{' '}
         </MoneyStyle>
-        <Text>{formatPrice(amount)}</Text>
+        <TextBold size={16}>{formatPrice(amount)}</TextBold>
       </FlexCenter>
       <FlexRight>
         <CateogryText>{data.category?.name}</CateogryText>

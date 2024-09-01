@@ -108,13 +108,16 @@ type MonthType = {
   is_calculated: boolean;
 };
 
-type Expense = {
+type ExpenseType = {
   id: string;
   created_at: string;
   updated_at: string;
   amount: number;
   description?: string;
   created_user_id?: string;
+  users?: {
+    name: string;
+  };
   category_id?: string;
   category?: {
     name: string;

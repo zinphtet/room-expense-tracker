@@ -12,4 +12,5 @@ export const screenNames = {
   add_new_member: 'Add New Member',
   month: 'Financial Months',
   expense_list: 'Expense List',
+  expense_detail: 'Expense Details',
 };

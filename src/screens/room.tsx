@@ -12,6 +12,7 @@ import Members from './room/members';
 import AddNewMemberScreen from './room/add-new-member';
 import MonthsScreen from './room/months';
 import ExpenseScreen from './room/expense-screen';
+import RoomExpenseDetails from './room/expense-detail';
 
 const Stack = createNativeStackNavigator();
 const RoomScreen = () => {
@@ -44,6 +45,11 @@ const RoomScreen = () => {
         component={RoomCategories}
       />
       <Stack.Screen name={screenNames.expense_list} component={ExpenseScreen} />
+      <Stack.Screen
+        name={screenNames.expense_detail}
+        // @ts-ignore
+        component={RoomExpenseDetails}
+      />
     </Stack.Navigator>
   );
 };

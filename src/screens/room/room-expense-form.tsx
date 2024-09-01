@@ -16,6 +16,8 @@ import {useQueryClient} from '@tanstack/react-query';
 import {useRoomStore} from '../../store/room';
 import {useMonthStore} from '../../store/month';
 import {useToast} from 'react-native-toast-notifications';
+import {enGB, registerTranslation} from 'react-native-paper-dates';
+registerTranslation('en-GB', enGB);
 type FormData = {
   categoryId: string;
   memberIds: string;
@@ -130,10 +132,11 @@ const ExpenseForm = () => {
         // Invalidate all quantities
         queryClient.invalidateQueries();
       },
-      onError: () => {
+      onError: err => {
         toast.show('Error creating  expense', {
           type: 'danger',
         });
+        log(err, 'error creating expense');
       },
     });
   };

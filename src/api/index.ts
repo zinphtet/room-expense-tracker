@@ -1,3 +1,4 @@
+import {log} from '../lib/helper';
 import {supabase} from '../lib/supabase';
 
 const RecentHistoryLimit = 5;
@@ -178,7 +179,11 @@ export const addRoomExpense = async (createObj: CreateRoomExpenseType) => {
     .from('expense')
     .insert([createObj])
     .select();
-  return {data, error};
+  if (error) {
+    log(error, 'error inserting');
+    throw new Error(error.message);
+  }
+  return {data};
 };
 
 export const getAllExpenses = async () => {
