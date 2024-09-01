@@ -23,7 +23,6 @@ const CategoryCreateForm: React.FC<FormProps> = ({isUpdate, updateObject}) => {
   const {isPending: isUpdating, mutate: updateCategory} = useUpdateCategory();
   const toast = useToast();
   const queryClinet = useQueryClient();
-  console.log('udpateOBje', JSON.stringify(updateObject, null, 2));
   const {
     control,
     handleSubmit,

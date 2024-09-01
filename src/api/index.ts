@@ -173,3 +173,11 @@ export const getActiveMonth = async () => {
     .eq('is_active', true);
   return {data, error};
 };
+
+export const addRoomExpense = async (createObj: CreateRoomExpenseType) => {
+  const {data, error} = await supabase
+    .from('expense')
+    .insert([createObj])
+    .select();
+  return {data, error};
+};

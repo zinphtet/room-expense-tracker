@@ -1,49 +1,192 @@
-import {Controller, useForm} from 'react-hook-form';
-import {Container, FormContainer} from '../../style';
-import {TextInput} from 'react-native-paper';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
+import {Container, ErrorText, FormContainer} from '../../style';
+import {Button, TextInput} from 'react-native-paper';
 import {PaperSelect} from 'react-native-paper-select';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useMemo, useState} from 'react';
 import {DatePickerInput} from 'react-native-paper-dates';
+import {View} from 'react-native';
+import styled from 'styled-components/native';
+import {
+  useGetCategoriesByRoom,
+  useGetMembersByRoom,
+} from '../../hooks/useQuery';
+import {log} from '../../lib/helper';
+import {useQueryClient} from '@tanstack/react-query';
+import {useRoomStore} from '../../store/room';
 type FormData = {
   categoryId: string;
   memberIds: string;
-  amount: number;
+  amount: string;
   description: string;
-  room_money: boolean;
+  room_money: string;
   date: Date | undefined;
 };
 
 const ExpenseForm = () => {
-  const {control, watch} = useForm<FormData>({
-    defaultValues: {
-      date: undefined,
-    },
+  const {
+    control,
+    watch,
+    handleSubmit,
+    formState: {errors},
+  } = useForm<FormData>();
+
+  // GET local data
+  const room = useRoomStore(state => state.room?.room);
+
+  // fetch remote data
+  const {data: categories, isLoading: categoryLoading} =
+    useGetCategoriesByRoom();
+  const listCategory = useMemo(() => {
+    return categories?.data?.map(cat => {
+      return {_id: cat.id as string, value: cat.name as string};
+    });
+  }, [categories?.data]);
+  const [categoriesList, setCategoriesList] = useState({
+    value: '',
+    list: categories?.data?.map(cat => {
+      return {_id: cat.id as string, value: cat.name as string};
+    }),
+    selectedList: [],
+    error: '',
   });
-  const [colors, setColors] = useState({
+
+  const [roomMoney, setRoomMoney] = useState({
     value: '',
     list: [
-      {_id: '1', value: 'BLUE'},
-      {_id: '2', value: 'RED'},
-      {_id: '3', value: 'GREEN'},
-      {_id: '4', value: 'YELLOW'},
-      {_id: '5', value: 'BROWN'},
-      {_id: '6', value: 'BLACK'},
-      {_id: '7', value: 'WHITE'},
-      {_id: '8', value: 'CYAN'},
+      {
+        _id: '1',
+        value: 'Room Money',
+      },
+      {
+        _id: '2',
+        value: 'Own Money',
+      },
     ],
     selectedList: [],
     error: '',
   });
-  const [inputDate, setInputDate] = useState(undefined);
 
-  const mydate = watch('date');
-  console.log('mydate', mydate);
+  const {data: members, isLoading: isMemberLoading} = useGetMembersByRoom();
+  const memberList = useMemo(() => {
+    return (
+      members?.data?.map(mem => ({
+        _id: mem.id as string,
+        value: mem.name as string,
+      })) || []
+    );
+  }, [members?.data]);
+  const memberSelectObject = {
+    value: '',
+    list: memberList || [],
+    selectedList: [],
+    error: '',
+  };
+  const [memberIds, setMemberIds] = useState(memberSelectObject);
+
+  const submitHandler: SubmitHandler<FormData> = data => {
+    // console.log('Submitted data', JSON.stringify(data, null, 2));
+
+    // log(categoriesList, 'selected categroies');
+
+    // log(memberIds), 'selected members';
+    // @ts-ignore
+    const categoryId = categoriesList.selectedList[0]._id;
+    const membersIdArr = memberIds.selectedList.map(member => {
+      // @ts-ignore
+      return member._id;
+    });
+
+    const createObj: CreateRoomExpenseType = {
+      amount: parseInt(data.amount),
+      description: data.description,
+      category_id: categoryId,
+      room_id: room?.id!,
+      expense_date: data.date ? new Date(data.date).toISOString() : '',
+      is_room_money: data.room_money === 'Own Money' ? false : true,
+      month_id: '',
+      member_ids: JSON.stringify(membersIdArr),
+    };
+    log(createObj, 'created Object');
+  };
+
+  useEffect(() => {
+    if (memberList) {
+      setMemberIds(prevState => ({
+        ...prevState,
+        list: memberList,
+      }));
+    }
+  }, [memberList]);
+
+  useEffect(() => {
+    if (listCategory) {
+      setCategoriesList(prevState => ({
+        ...prevState,
+        list: listCategory,
+      }));
+    }
+  }, [listCategory]);
 
   return (
-    <Container horizontal={20} vertical={20} gap={10}>
+    <Container horizontal={20} vertical={20}>
+      {!categoryLoading && (
+        <Controller
+          name="categoryId"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({field}) => {
+            return (
+              <PaperSelect
+                label="Select Category"
+                // value={categoriesList.value}
+                value={field.value}
+                errorStyle={{
+                  backgroundColor: errors.categoryId && '#cf7070',
+                }}
+                onSelection={(value: any) => {
+                  log(value, 'cateogry value');
+                  field.onChange(value.text);
+                  setCategoriesList({
+                    ...categoriesList,
+                    value: value.text,
+                    selectedList: value.selectedList,
+                    error: '',
+                  });
+                }}
+                arrayList={[
+                  ...(categoriesList?.list || [
+                    {_id: 'loading', value: 'loading ...'},
+                  ]),
+                ]}
+                selectedArrayList={categoriesList.selectedList}
+                errorText={categoriesList.error}
+                multiEnable={false}
+                textInputMode="flat"
+                // searchStyle={{iconColor: 'red'}}
+                // searchPlaceholder="Procurar"
+                // limitError='hrllo'
+                dialogCloseButtonText="Close"
+                dialogDoneButtonText="Add"
+              />
+            );
+          }}
+        />
+      )}
+      {errors.categoryId && (
+        <ErrorText style={{marginTop: -10, paddingBottom: 10}}>
+          Please select category
+        </ErrorText>
+      )}
+
       <Controller
         name="amount"
         control={control}
+        rules={{
+          min: 3,
+          required: true,
+        }}
         render={({field}) => {
           return (
             <>
@@ -51,50 +194,44 @@ const ExpenseForm = () => {
                 label={'Amonut'}
                 keyboardType="numeric"
                 value={field.value}
-                onChange={field.onChange}
+                // {...register('amount')}
+                style={{marginBottom: 10}}
+                onChangeText={field.onChange}
+                // {...field}
               />
             </>
           );
         }}
       />
+      {errors.amount && (
+        <ErrorText style={{marginTop: -10, paddingBottom: 10}}>
+          Please enter amount
+        </ErrorText>
+      )}
       <Controller
-        name="description"
+        name="room_money"
         control={control}
-        render={({field}) => {
-          return (
-            <>
-              <TextInput
-                label={'Description'}
-                multiline={true}
-                numberOfLines={3}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            </>
-          );
+        rules={{
+          required: true,
         }}
-      />
-
-      <Controller
-        name="categoryId"
-        control={control}
         render={({field}) => {
           return (
             <PaperSelect
-              label="Select Colors"
-              value={colors.value}
+              label="Billing From"
+              value={field.value}
               onSelection={(value: any) => {
-                setColors({
-                  ...colors,
+                field.onChange(value.text);
+                setRoomMoney({
+                  ...roomMoney,
                   value: value.text,
                   selectedList: value.selectedList,
                   error: '',
                 });
               }}
-              arrayList={[...colors.list]}
-              selectedArrayList={colors.selectedList}
-              errorText={colors.error}
-              multiEnable={true}
+              arrayList={[...roomMoney.list]}
+              selectedArrayList={roomMoney.selectedList}
+              errorText={roomMoney.error}
+              multiEnable={false}
               textInputMode="flat"
               // searchStyle={{iconColor: 'red'}}
               // searchPlaceholder="Procurar"
@@ -105,15 +242,68 @@ const ExpenseForm = () => {
           );
         }}
       />
+      {errors.room_money && (
+        <ErrorText style={{marginTop: -10, paddingBottom: 10}}>
+          Please select Billing From
+        </ErrorText>
+      )}
+      {!isMemberLoading && (
+        <Controller
+          name="memberIds"
+          control={control}
+          rules={{
+            required: true,
+          }}
+          render={({field}) => {
+            return (
+              <PaperSelect
+                label="Select Members"
+                value={field.value}
+                onSelection={(value: any) => {
+                  field.onChange(value.text);
+                  setMemberIds({
+                    ...memberIds,
+                    value: value.text,
+                    selectedList: value.selectedList,
+                    error: '',
+                  });
+                }}
+                arrayList={[
+                  ...(memberIds?.list || [
+                    {_id: 'loading', value: 'loading ...'},
+                  ]),
+                ]}
+                selectedArrayList={memberIds.selectedList}
+                errorText={memberIds.error}
+                multiEnable={true}
+                textInputMode="flat"
+                // searchStyle={{iconColor: 'red'}}
+                // searchPlaceholder="Procurar"
+                // limitError='hrllo'
+                dialogCloseButtonText="Close"
+                dialogDoneButtonText="Add"
+              />
+            );
+          }}
+        />
+      )}
+      {errors.memberIds && (
+        <ErrorText style={{marginTop: -10, paddingBottom: 10}}>
+          Please select members{' '}
+        </ErrorText>
+      )}
 
       <Controller
         control={control}
         name="date"
+        rules={{
+          required: true,
+        }}
         render={({field}) => {
           return (
             <DatePickerInput
               locale="en"
-              style={{marginTop: 20}}
+              style={{marginTop: 55}}
               label="Expense date"
               value={field.value}
               onChange={field.onChange}
@@ -122,8 +312,42 @@ const ExpenseForm = () => {
           );
         }}
       />
+      {errors.date && (
+        <ErrorText style={{marginTop: 55, paddingBottom: 10}}>
+          Please select date
+        </ErrorText>
+      )}
+      <Controller
+        name="description"
+        control={control}
+        render={({field}) => {
+          return (
+            <>
+              <TextInput
+                label={'Description'}
+                multiline={true}
+                numberOfLines={3}
+                style={{marginTop: errors.date ? 0 : 65}}
+                value={field.value}
+                onChangeText={field.onChange}
+              />
+            </>
+          );
+        }}
+      />
+      <ButtonContainer>
+        <Button mode="contained" onPress={handleSubmit(submitHandler)}>
+          Add Expense
+        </Button>
+      </ButtonContainer>
     </Container>
   );
 };
 
 export default ExpenseForm;
+
+const ButtonContainer = styled.View`
+  margin-top: 40px;
+  align-items: center;
+  justify-content: center;
+`;

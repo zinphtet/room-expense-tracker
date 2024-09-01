@@ -2,6 +2,7 @@ import {useMutation, useQuery} from '@tanstack/react-query';
 import keys from '../constants/query-keys';
 import {
   addMemberToRoom,
+  addRoomExpense,
   createCategory,
   createMonth,
   createNewRoom,
@@ -102,7 +103,7 @@ export const useUpdateCategory = () => {
   return {isError, isPending, mutate};
 };
 
-export const useMembersByRoom = () => {
+export const useGetMembersByRoom = () => {
   const room = useRoomStore(state => state.room);
   const {data, isError, isLoading} = useQuery({
     queryFn: () => getMembersByRoomId(room?.room.id!),
@@ -163,4 +164,11 @@ export const useGetActiveMonth = () => {
     queryFn: getActiveMonth,
   });
   return {isError, isLoading, data};
+};
+
+export const useCreateRoomExpense = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: addRoomExpense,
+  });
+  return {isError, isPending, mutate};
 };

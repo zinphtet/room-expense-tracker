@@ -1,9 +1,9 @@
 import {View, Text, FlatList} from 'react-native';
-import {useMembersByRoom} from '../hooks/useQuery';
+import {useGetMembersByRoom} from '../hooks/useQuery';
 import MemberCard from './member-card';
 
 const RoomMembers = () => {
-  const {data, isLoading} = useMembersByRoom();
+  const {data, isLoading} = useGetMembersByRoom();
   const idArrs = data?.data as unknown as Member[];
   return (
     <View>

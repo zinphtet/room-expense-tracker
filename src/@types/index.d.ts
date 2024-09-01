@@ -107,3 +107,33 @@ type MonthType = {
   created_user_id: string;
   is_calculated: boolean;
 };
+
+type Expense = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  amount: number;
+  description: string;
+  created_user_id: string;
+  category_id: string;
+  room_id: string;
+  is_confirmed: boolean;
+  for_myself: boolean;
+  is_active: boolean;
+  expense_date: string;
+  to_room: boolean;
+  is_room_money: boolean;
+  month_id: string;
+  member_ids: string;
+};
+
+type CreateRoomExpenseType = {
+  amount: number;
+  description: string;
+  category_id: string;
+  room_id: string;
+  expense_date: string;
+  is_room_money: boolean;
+  month_id: string;
+  member_ids: string;
+};
