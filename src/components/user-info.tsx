@@ -1,7 +1,9 @@
-import {Alert, Button, Text, View} from 'react-native';
+import {Alert, Text, View} from 'react-native';
 import useGetSession from '../hooks/getSession';
 import {supabase} from '../lib/supabase';
 import {useState} from 'react';
+import {Container, FlexRight, TextBold} from '../style';
+import {Button} from 'react-native-paper';
 
 const UserInfo = () => {
   const [isLoading, setLoading] = useState(false);
@@ -20,16 +22,22 @@ const UserInfo = () => {
   };
   return (
     <View>
-      <Text>{session?.user.email}</Text>
-      <Text>{session?.user.user_metadata.display_name}</Text>
-
-      <Button
-        onPress={() => logoutHandler()}
-        disabled={isLoading}
-        title={isLoading ? 'Loading ...' : 'Logout'}
-      />
-
-      <Text>Hello</Text>
+      <Container gap={10} vertical={50}>
+        <TextBold size={30}>
+          {session?.user.user_metadata.display_name}
+        </TextBold>
+        <Text>{session?.user.email}</Text>
+      </Container>
+      <Container vertical={20}>
+        <FlexRight>
+          <Button
+            mode="contained"
+            onPress={() => logoutHandler()}
+            disabled={isLoading}>
+            Logout
+          </Button>
+        </FlexRight>
+      </Container>
     </View>
   );
 };

@@ -5,6 +5,7 @@ import {useGetUserById} from '../../hooks/useQuery';
 import styled from 'styled-components/native';
 import theme from '../../constants/theme';
 import {Button} from 'react-native-paper';
+import {useUserStore} from '../../store/user';
 
 const RoomExpenseDetails: React.FC<{
   route: {params: {expense: ExpenseType}};
@@ -17,9 +18,11 @@ const RoomExpenseDetails: React.FC<{
     isError,
     isLoading: isLoadingMembers,
   } = useGetUserById(memberIds);
-  log(data?.data, 'Member list');
   const expenseDate = new Date(expense.expense_date);
   const createdDate = new Date(expense.created_at);
+  const user = useUserStore(store => store.user);
+
+  const hasPermission = user?.user.id === expense.created_user_id;
   return (
     <ScrollView>
       <Container vertical={20} horizontal={20} gap={40}>
@@ -67,10 +70,12 @@ const RoomExpenseDetails: React.FC<{
             </Container>
           )}
         </Container>
-        <FlexRightCenter>
-          <Button mode="contained-tonal">Delete</Button>
-          <Button mode="contained">Edit</Button>
-        </FlexRightCenter>
+        {hasPermission && (
+          <FlexRightCenter>
+            <Button mode="contained-tonal">Delete</Button>
+            <Button mode="contained">Edit</Button>
+          </FlexRightCenter>
+        )}
       </Container>
     </ScrollView>
   );

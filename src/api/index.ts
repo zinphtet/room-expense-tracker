@@ -88,7 +88,9 @@ export const createCategory = async (inputObj: CreateCategroyInputType) => {
 
 export const deleteCategory = async (id: string) => {
   const {error} = await supabase.from('category').delete().eq('id', id);
-
+  if (error) {
+    throw new Error('Error deleting category');
+  }
   return {error};
 };
 
@@ -154,6 +156,7 @@ export const updateMonth = async (updateObj: UpdateMonthType) => {
 
 export const deleteMonth = async (id: string) => {
   const {error} = await supabase.from('month').delete().eq('id', id);
+
   return {error};
 };
 
@@ -190,7 +193,7 @@ export const getAllExpenses = async () => {
   let {data, error} = await supabase
     .from('expense')
     .select(
-      'id,created_at,expense_date,amount,category(name),description,is_room_money,member_ids,users(name)',
+      'id,created_at,expense_date,amount,created_user_id,category(name),description,is_room_money,member_ids,users(name)',
     )
     .order('expense_date', {ascending: false});
 
