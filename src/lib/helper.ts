@@ -20,3 +20,16 @@ export const log = (input: any, text: string = '') => {
 export const formatDateOne = (date: string) => {
   return format(new Date(date), 'dd/MM/yyyy');
 };
+
+export const formatPrice = (amount: number | string) => {
+  if (typeof amount === 'string') {
+    amount = parseInt(amount);
+  }
+  return (
+    new Intl.NumberFormat('en-US', {
+      style: 'decimal',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount) + ' MMK'
+  );
+};

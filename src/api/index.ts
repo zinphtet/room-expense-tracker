@@ -110,9 +110,8 @@ export const getMembersByRoomId = async (id: string) => {
   return {data, error};
 };
 
-export const getUsersById = async (id: string) => {
-  const {data, error} = await supabase.from('users').select('*').eq('id', id);
-
+export const getUsersById = async (ids: string[]) => {
+  const {data, error} = await supabase.from('users').select('*').in('id', ids);
   return {data, error};
 };
 

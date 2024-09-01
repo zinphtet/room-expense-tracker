@@ -114,13 +114,14 @@ export const useGetMembersByRoom = () => {
   return {isError, isLoading, data};
 };
 
-export const useGetUserById = (id: string) => {
+export const useGetUserById = (ids : string[]) => {
   const {data, isError, isLoading} = useQuery({
-    queryFn: () => getUsersById(id),
-    queryKey: [keys.user, id],
+    queryFn: () => getUsersById(ids),
+    queryKey: [keys.user, JSON.stringify(ids)],
   });
   return {isError, isLoading, data};
 };
+
 
 export const useRemoveUserFromRoom = () => {
   const {data, isError, isPending, mutate} = useMutation({

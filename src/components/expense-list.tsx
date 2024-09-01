@@ -1,4 +1,4 @@
-import {Text, View} from 'react-native';
+import {FlatList, Text, View} from 'react-native';
 import styled from 'styled-components/native';
 import {Container} from '../style';
 import ExpenseItem from './expense-item';
@@ -13,9 +13,14 @@ const ExpenseList = () => {
       <Title>Expense List</Title>
       <Container gap={10}>
         {isLoading && <Text>Loading...</Text>}
-        {data?.data?.map((expense: any) => {
-          return <ExpenseItem {...expense} />;
-        })}
+        <FlatList
+          data={data?.data || []}
+          renderItem={({item, index}) => {
+            return <ExpenseItem {...item} />;
+          }}
+          keyExtractor={item => item.id}
+          ItemSeparatorComponent={() => <View style={{height: 10}} />}
+        />
       </Container>
     </Container>
   );

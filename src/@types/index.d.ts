@@ -116,6 +116,9 @@ type Expense = {
   description?: string;
   created_user_id?: string;
   category_id?: string;
+  category?: {
+    name: string;
+  };
   room_id?: string;
   is_confirmed?: boolean;
   for_myself?: boolean;
