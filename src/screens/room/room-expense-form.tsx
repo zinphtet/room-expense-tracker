@@ -7,12 +7,15 @@ import {DatePickerInput} from 'react-native-paper-dates';
 import {View} from 'react-native';
 import styled from 'styled-components/native';
 import {
+  useCreateRoomExpense,
   useGetCategoriesByRoom,
   useGetMembersByRoom,
 } from '../../hooks/useQuery';
 import {log} from '../../lib/helper';
 import {useQueryClient} from '@tanstack/react-query';
 import {useRoomStore} from '../../store/room';
+import {useMonthStore} from '../../store/month';
+import {useToast} from 'react-native-toast-notifications';
 type FormData = {
   categoryId: string;
   memberIds: string;
@@ -27,12 +30,21 @@ const ExpenseForm = () => {
     control,
     watch,
     handleSubmit,
+    reset,
+    setValue,
     formState: {errors},
   } = useForm<FormData>();
 
+  const {
+    isError: isErrorCreatingExpense,
+    isPending: isCreatingExpense,
+    mutate: createRoomExpense,
+  } = useCreateRoomExpense();
+  const toast = useToast();
   // GET local data
   const room = useRoomStore(state => state.room?.room);
-
+  const month = useMonthStore(state => state.month);
+  const queryClient = useQueryClient();
   // fetch remote data
   const {data: categories, isLoading: categoryLoading} =
     useGetCategoriesByRoom();
@@ -103,10 +115,27 @@ const ExpenseForm = () => {
       room_id: room?.id!,
       expense_date: data.date ? new Date(data.date).toISOString() : '',
       is_room_money: data.room_money === 'Own Money' ? false : true,
-      month_id: '',
+      month_id: month?.id!,
       member_ids: JSON.stringify(membersIdArr),
     };
     log(createObj, 'created Object');
+    createRoomExpense(createObj, {
+      onSuccess: () => {
+        toast.show('Successfully created', {
+          type: 'success',
+        });
+        reset();
+        setValue('amount', '');
+        setValue('description', '');
+        // Invalidate all quantities
+        queryClient.invalidateQueries();
+      },
+      onError: () => {
+        toast.show('Error creating  expense', {
+          type: 'danger',
+        });
+      },
+    });
   };
 
   useEffect(() => {
@@ -336,7 +365,10 @@ const ExpenseForm = () => {
         }}
       />
       <ButtonContainer>
-        <Button mode="contained" onPress={handleSubmit(submitHandler)}>
+        <Button
+          mode="contained"
+          disabled={isCreatingExpense}
+          onPress={handleSubmit(submitHandler)}>
           Add Expense
         </Button>
       </ButtonContainer>

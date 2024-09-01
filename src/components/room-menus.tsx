@@ -7,6 +7,7 @@ import {screenNames} from '../constants';
 const Menus = [
   {
     name: 'clipboard-list-outline',
+    to: screenNames.expense_list,
   },
   {
     name: 'account-group',

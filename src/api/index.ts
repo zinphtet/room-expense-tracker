@@ -181,3 +181,14 @@ export const addRoomExpense = async (createObj: CreateRoomExpenseType) => {
     .select();
   return {data, error};
 };
+
+export const getAllExpenses = async () => {
+  let {data, error} = await supabase
+    .from('expense')
+    .select(
+      'id,created_at,expense_date,amount,category(name),description,is_room_money,member_ids,users(name)',
+    )
+    .order('expense_date', {ascending: false});
+
+  return {data, error};
+};

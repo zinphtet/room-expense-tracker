@@ -5,9 +5,17 @@ import {FlexCenter, WhiteText} from '../style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useGetActiveMonth} from '../hooks/useQuery';
+import {useEffect} from 'react';
+import {useMonthStore} from '../store/month';
 const RoomCard: React.FC<RoomType> = room => {
   const {isError, isLoading, data} = useGetActiveMonth();
+  const setMonth = useMonthStore(store => store.setMonth);
   const activeMonth = data?.data![0] as unknown as MonthType;
+  useEffect(() => {
+    if (activeMonth) {
+      setMonth(activeMonth);
+    }
+  }, [activeMonth]);
   return (
     <CardContainer>
       <RoomName>{room?.room?.name}</RoomName>

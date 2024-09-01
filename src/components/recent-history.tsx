@@ -7,7 +7,7 @@ import {useGetRecentExpenses} from '../hooks/useQuery';
 import {FlatList, View} from 'react-native';
 import {formatDateOne, log} from '../lib/helper';
 import {format} from 'date-fns';
-import ExpenseItem from './expense-item';
+import ExpenseItem from './expense-history-item';
 import {ScrollView} from 'react-native';
 
 const transactions = [

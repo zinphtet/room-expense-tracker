@@ -9,6 +9,7 @@ import {
   deleteCategory,
   deleteMonth,
   getActiveMonth,
+  getAllExpenses,
   getCategoriesByRoomId,
   getMembersByRoomId,
   getMonthsByRoom,
@@ -171,4 +172,12 @@ export const useCreateRoomExpense = () => {
     mutationFn: addRoomExpense,
   });
   return {isError, isPending, mutate};
+};
+
+export const useGetAllExpenses = () => {
+  const {data, isError, isLoading} = useQuery({
+    queryKey: [keys],
+    queryFn: getAllExpenses,
+  });
+  return {data, isError, isLoading};
 };

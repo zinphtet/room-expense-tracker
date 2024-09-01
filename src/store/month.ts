@@ -23,7 +23,7 @@ const customStorage = {
   },
 };
 
-export const useMonthStorage = create<MonthState>()(
+export const useMonthStore = create<MonthState>()(
   persist(
     set => ({
       month: null, // Initially, the user is null

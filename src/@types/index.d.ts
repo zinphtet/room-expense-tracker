@@ -113,17 +113,17 @@ type Expense = {
   created_at: string;
   updated_at: string;
   amount: number;
-  description: string;
-  created_user_id: string;
-  category_id: string;
-  room_id: string;
-  is_confirmed: boolean;
-  for_myself: boolean;
-  is_active: boolean;
+  description?: string;
+  created_user_id?: string;
+  category_id?: string;
+  room_id?: string;
+  is_confirmed?: boolean;
+  for_myself?: boolean;
+  is_active?: boolean;
   expense_date: string;
-  to_room: boolean;
-  is_room_money: boolean;
-  month_id: string;
+  to_room?: boolean;
+  is_room_money?: boolean;
+  month_id?: string;
   member_ids: string;
 };
 
