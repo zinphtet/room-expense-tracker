@@ -10,9 +10,6 @@ import {formatPrice} from '../lib/helper';
 const CategoryExpense = () => {
   const {data, isError, isLoading} = useGetExpenseByCategory();
 
-  //   useEffect(() => {
-  //     getCategoryExpense().then().catch();
-  //   }, []);
   return (
     <Container vertical={20}>
       {isLoading && (

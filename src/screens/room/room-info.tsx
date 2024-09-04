@@ -17,6 +17,9 @@ const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
   const routeToAddExpense = () => {
     navigation.push(screenNames.room_expense_form);
   };
+  const routeToAddRoom = () => {
+    navigation.push(screenNames.add_to_room);
+  };
   const room = data?.data![0] as unknown as RoomType;
   useEffect(() => {
     setRoom(room);
@@ -38,6 +41,9 @@ const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
           <RoomCard {...room} />
           <RoomMenus navigation={navigation} />
           <ButtonContainer>
+            <Button icon={'plus'} mode="contained" onPress={routeToAddRoom}>
+              Add to Room
+            </Button>
             <Button icon={'plus'} mode="contained" onPress={routeToAddExpense}>
               Add Expense
             </Button>
@@ -58,5 +64,7 @@ const RoomViewContainer = styled.View`
 
 const ButtonContainer = styled.View`
   align-items: center;
+  flex-direction: row;
+  gap: 20px;
   justify-content: center;
 `;

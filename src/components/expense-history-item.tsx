@@ -1,4 +1,4 @@
-import {View} from 'react-native';
+
 import {Text} from 'react-native-paper';
 import styled from 'styled-components/native';
 import {formatDateOne} from '../lib/helper';
@@ -8,7 +8,7 @@ const ExpenseItem: React.FC<Expense> = item => {
   return (
     <ExpenseItemContainer>
       <FlexCenter>
-        <SubTitleText>{item.category.name}</SubTitleText>
+        <SubTitleText>{item?.category?.name}</SubTitleText>
         <SubTitleText>{item.amount} MMK</SubTitleText>
       </FlexCenter>
       <FlexCenter>

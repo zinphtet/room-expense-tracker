@@ -189,12 +189,14 @@ export const addRoomExpense = async (createObj: CreateRoomExpenseType) => {
   return {data};
 };
 
-export const getAllExpenses = async () => {
+export const getAllExpenses = async (roomId: string, monthId: string) => {
   let {data, error} = await supabase
     .from('expense')
     .select(
-      'id,created_at,expense_date,amount,created_user_id,category(name),description,is_room_money,member_ids,users(name)',
+      'id,created_at,expense_date,amount,created_user_id,to_room,category(name),description,is_room_money,member_ids,users(name)',
     )
+    .eq('room_id', roomId)
+    .eq('month_id', monthId)
     .order('expense_date', {ascending: false});
 
   return {data, error};
@@ -217,7 +219,24 @@ export const getCategoryExpense = async () => {
     return acc;
   }, {} as Record<number, typeof data>);
   const keys = Object.keys(grouupByExpId);
-  log(grouupByExpId, 'expense by category');
-  log(keys, 'expense keys');
   return {keys, expenseByCategoryId: grouupByExpId};
+};
+
+export const addToRoomMoney = async (createObj: AddRoomMoneyType) => {
+  const {data, error} = await supabase
+    .from('expense')
+    .insert([
+      {
+        ...createObj,
+        to_room: true,
+        is_room_money: false,
+        expense_date: new Date(),
+      },
+    ])
+    .select();
+  if (error) {
+    log(error, 'error inserting money');
+    throw new Error('Error adding money to room');
+  }
+  return {data};
 };

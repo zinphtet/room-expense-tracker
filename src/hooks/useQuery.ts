@@ -3,6 +3,7 @@ import keys from '../constants/query-keys';
 import {
   addMemberToRoom,
   addRoomExpense,
+  addToRoomMoney,
   createCategory,
   createMonth,
   createNewRoom,
@@ -24,6 +25,7 @@ import {
 } from '../api';
 import {useUserStore} from '../store/user';
 import {useRoomStore} from '../store/room';
+import {useMonthStore} from '../store/month';
 
 export const useGetRecentExpenses = () => {
   const {user} = useUserStore();
@@ -176,9 +178,11 @@ export const useCreateRoomExpense = () => {
 };
 
 export const useGetAllExpenses = () => {
+  const month = useMonthStore(store => store.month);
+  const room = useRoomStore(store => store.room?.room);
   const {data, isError, isLoading} = useQuery({
     queryKey: [keys],
-    queryFn: getAllExpenses,
+    queryFn: () => getAllExpenses(room?.id!, month?.id!),
   });
   return {data, isError, isLoading};
 };
@@ -189,4 +193,11 @@ export const useGetExpenseByCategory = () => {
     queryFn: getCategoryExpense,
   });
   return {data, isError, isLoading};
+};
+
+export const useCreateAddToRoom = () => {
+  const {isError, isPending, mutate} = useMutation({
+    mutationFn: addToRoomMoney,
+  });
+  return {isError, isPending, mutate};
 };

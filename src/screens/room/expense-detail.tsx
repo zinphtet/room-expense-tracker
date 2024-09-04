@@ -27,7 +27,9 @@ const RoomExpenseDetails: React.FC<{
     <ScrollView>
       <Container vertical={20} horizontal={20} gap={40}>
         <FlexCenter>
-          <CategoryText>{expense.category?.name}</CategoryText>
+          <CategoryText>
+            {!expense.to_room ? expense.category?.name : 'ADDED TO ROOM'}
+          </CategoryText>
           <MoneyStyle isRed={expense.is_room_money}>
             {expense.is_room_money ? 'ROOM' : 'OWN'}
           </MoneyStyle>

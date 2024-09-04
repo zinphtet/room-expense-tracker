@@ -17,7 +17,9 @@ const ExpenseItem: React.FC<any> = data => {
         <TextBold size={16}>{formatPrice(amount)}</TextBold>
       </FlexCenter>
       <FlexRight>
-        <CateogryText>{data.category?.name}</CateogryText>
+        <CateogryText>
+          {!data?.to_room ? data.category?.name : 'ADDED TO ROOM'}
+        </CateogryText>
       </FlexRight>
       <FlexCenter>
         <Text>Expense Date</Text>

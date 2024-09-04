@@ -13,6 +13,7 @@ import AddNewMemberScreen from './room/add-new-member';
 import MonthsScreen from './room/months';
 import ExpenseScreen from './room/expense-screen';
 import RoomExpenseDetails from './room/expense-detail';
+import AddToRoomForm from './room/add-to-room-form';
 
 const Stack = createNativeStackNavigator();
 const RoomScreen = () => {
@@ -49,6 +50,11 @@ const RoomScreen = () => {
         name={screenNames.expense_detail}
         // @ts-ignore
         component={RoomExpenseDetails}
+      />
+      <Stack.Screen
+        name={screenNames.add_to_room}
+        // @ts-ignore
+        component={AddToRoomForm}
       />
     </Stack.Navigator>
   );

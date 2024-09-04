@@ -13,4 +13,5 @@ export const screenNames = {
   month: 'Financial Months',
   expense_list: 'Expense List',
   expense_detail: 'Expense Details',
+  add_to_room: 'Add to Room',
 };

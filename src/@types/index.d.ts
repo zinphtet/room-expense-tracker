@@ -151,3 +151,10 @@ interface ExpenseCategory {
     name: string;
   };
 }
+
+interface AddRoomMoneyType {
+  amount: number;
+  room_id: string;
+  month_id: string;
+  description?: string;
+}

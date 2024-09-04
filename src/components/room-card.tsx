@@ -4,11 +4,13 @@ import theme from '../constants/theme';
 import {FlexCenter, WhiteText} from '../style';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import MaterialCommunity from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useGetActiveMonth} from '../hooks/useQuery';
+import {useGetActiveMonth, useGetAllExpenses} from '../hooks/useQuery';
 import {useEffect} from 'react';
 import {useMonthStore} from '../store/month';
+import {formatPrice, log} from '../lib/helper';
 const RoomCard: React.FC<RoomType> = room => {
   const {isError, isLoading, data} = useGetActiveMonth();
+  const {data: expenses, isLoading: isLoadingExpenses} = useGetAllExpenses();
   const setMonth = useMonthStore(store => store.setMonth);
   const activeMonth = data?.data![0] as unknown as MonthType;
   useEffect(() => {
@@ -16,17 +18,24 @@ const RoomCard: React.FC<RoomType> = room => {
       setMonth(activeMonth);
     }
   }, [activeMonth]);
+  const collectedMoney = expenses?.data
+    ?.filter(exp => exp.to_room === true)
+    .reduce((acc, exp) => acc + parseInt(exp.amount), 0);
+  const totalExpenses = expenses?.data
+    ?.filter(exp => exp.to_room === false)
+    .reduce((acc, exp) => acc + parseInt(exp.amount), 0);
+  log(totalExpenses, 'total expense');
   return (
     <CardContainer>
       <RoomName>{room?.room?.name}</RoomName>
       <RoomInfo>
         <FlexCenter>
           <AntDesign name="pluscircleo" size={25} color={'#fff'} />
-          <Money>12500 MMK</Money>
+          <Money>{formatPrice(collectedMoney!)}</Money>
         </FlexCenter>
         <FlexCenter>
           <AntDesign name="minuscircleo" size={25} color={'#fff'} />
-          <Money>13000 MMK</Money>
+          <Money> {formatPrice(totalExpenses!)}</Money>
         </FlexCenter>
         <FlexCenter>
           <MaterialCommunity
