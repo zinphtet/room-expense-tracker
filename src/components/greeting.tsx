@@ -7,9 +7,8 @@ const Greeting = () => {
   const user = useUserStore(store => store.user);
   return (
     <View>
-      <WhiteText variant="titleMedium"> Good Afternoon ,</WhiteText>
+      <WhiteText variant="titleMedium"> Welcome ,</WhiteText>
       <WhiteText variant="headlineSmall">
-        {' '}
         {user?.user.user_metadata?.display_name}
       </WhiteText>
     </View>

@@ -9,8 +9,9 @@ export const getRecentExpenes = async (userId: string) => {
   try {
     let {error, data} = await supabase
       .from('expense')
-      .select('id,amount,category(name), expense_date, created_at')
+      .select('id,amount,category(name), expense_date, created_at,to_room')
       .eq('created_user_id', userId)
+      .order('updated_at', {ascending: false})
       .limit(RecentHistoryLimit);
     return {error, data};
   } catch (err) {
@@ -164,7 +165,8 @@ export const getMonthsByRoom = async (roomId: string) => {
   let {data, error} = await supabase
     .from('month')
     .select('*')
-    .eq('room_id', roomId);
+    .eq('room_id', roomId)
+    .order('updated_at', {ascending: false});
 
   return {data, error};
 };
@@ -173,7 +175,8 @@ export const getActiveMonth = async () => {
   let {data, error} = await supabase
     .from('month')
     .select('*')
-    .eq('is_active', true);
+    .eq('is_active', true)
+    .eq('is_current', true);
   return {data, error};
 };
 
@@ -197,15 +200,18 @@ export const getAllExpenses = async (roomId: string, monthId: string) => {
     )
     .eq('room_id', roomId)
     .eq('month_id', monthId)
-    .order('expense_date', {ascending: false});
+    .order('updated_at', {ascending: false});
 
   return {data, error};
 };
 
-export const getCategoryExpense = async () => {
+export const getCategoryExpense = async (roomId: string, monthId: string) => {
   const {data, error} = await supabase
     .from('expense')
-    .select('category_id, amount, category(name)');
+    .select('category_id, amount, category(name)')
+    .eq('room_id', roomId)
+    .eq('month_id', monthId)
+    .order('updated_at', {ascending: false});
 
   if (error) {
     throw new Error('Error fetching expenses');
@@ -218,7 +224,7 @@ export const getCategoryExpense = async () => {
     acc[row.category_id].push(row);
     return acc;
   }, {} as Record<number, typeof data>);
-  const keys = Object.keys(grouupByExpId);
+  const keys = Object.keys(grouupByExpId).filter(key => key !== 'null');
   return {keys, expenseByCategoryId: grouupByExpId};
 };
 

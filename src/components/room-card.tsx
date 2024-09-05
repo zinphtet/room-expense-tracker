@@ -11,7 +11,7 @@ import {formatPrice, log} from '../lib/helper';
 const RoomCard: React.FC<RoomType> = room => {
   const {isError, isLoading, data} = useGetActiveMonth();
   const {data: expenses, isLoading: isLoadingExpenses} = useGetAllExpenses();
-  const setMonth = useMonthStore(store => store.setMonth);
+  const {setMonth, month} = useMonthStore(store => store);
   const activeMonth = data?.data![0] as unknown as MonthType;
   useEffect(() => {
     if (activeMonth) {
@@ -43,7 +43,7 @@ const RoomCard: React.FC<RoomType> = room => {
             size={30}
             color={'#fff'}
           />
-          <Money>{activeMonth?.name}</Money>
+          <Money>{month?.name}</Money>
         </FlexCenter>
       </RoomInfo>
     </CardContainer>

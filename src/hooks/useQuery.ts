@@ -29,6 +29,7 @@ import {useMonthStore} from '../store/month';
 
 export const useGetRecentExpenses = () => {
   const {user} = useUserStore();
+
   console.log('userid', user?.user.id);
 
   const userId = user?.user.id!;
@@ -181,16 +182,18 @@ export const useGetAllExpenses = () => {
   const month = useMonthStore(store => store.month);
   const room = useRoomStore(store => store.room?.room);
   const {data, isError, isLoading} = useQuery({
-    queryKey: [keys],
+    queryKey: [keys, `${month?.id}/${room?.id}`],
     queryFn: () => getAllExpenses(room?.id!, month?.id!),
   });
   return {data, isError, isLoading};
 };
 
 export const useGetExpenseByCategory = () => {
+  const month = useMonthStore(store => store.month);
+  const room = useRoomStore(store => store.room?.room);
   const {data, isError, isLoading} = useQuery({
-    queryKey: [keys.expenses_cateogry],
-    queryFn: getCategoryExpense,
+    queryKey: [keys.expenses_cateogry, `${month?.id}/${room?.id}`],
+    queryFn: () => getCategoryExpense(room?.id!, month?.id!),
   });
   return {data, isError, isLoading};
 };

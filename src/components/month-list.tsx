@@ -6,7 +6,7 @@ import {
   useGetMonthsByRoom,
 } from '../hooks/useQuery';
 import styled from 'styled-components/native';
-import {FlexCenter, ItemSeparator} from '../style';
+import {FlexCenter, FlexRight, ItemSeparator} from '../style';
 import Material from 'react-native-vector-icons/MaterialCommunityIcons';
 import theme from '../constants/theme';
 import {useState} from 'react';
@@ -15,10 +15,14 @@ import {useToast} from 'react-native-toast-notifications';
 import {useQueryClient} from '@tanstack/react-query';
 import CategoryCreateForm from './category-form';
 import MonthForm from './month-form';
+import {Button} from 'react-native-paper';
+import {useMonthStore} from '../store/month';
 
-const MonthItem: React.FC<MonthType> = ({name, id}) => {
+const MonthItem: React.FC<MonthType> = month => {
+  const {name, id} = month;
   const {isError, isPending, mutate: deleteCategory} = useDeleteMonth();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const setCurrentMonth = useMonthStore(store => store.setMonth);
   const queryClient = useQueryClient();
   const toast = useToast();
   const isLoading = isPending;
@@ -45,6 +49,11 @@ const MonthItem: React.FC<MonthType> = ({name, id}) => {
       },
     });
   };
+  const setCurrentMonthHandler = (month: MonthType) => {
+    setCurrentMonth(month);
+    queryClient.invalidateQueries();
+    queryClient.refetchQueries();
+  };
   return (
     <MonthItemContainer>
       <ConfirmDialog
@@ -70,6 +79,12 @@ const MonthItem: React.FC<MonthType> = ({name, id}) => {
           </Pressable>
         </FlexCenter>
       </FlexCenter>
+      <BtnContainer>
+        <Button mode="outlined" onPress={() => setCurrentMonthHandler(month)}>
+          Set Current
+        </Button>
+        <Button mode="contained">Active </Button>
+      </BtnContainer>
     </MonthItemContainer>
   );
 };
@@ -96,4 +111,12 @@ const MonthItemContainer = styled.View`
   padding: 20px;
   border-radius: 10px;
   background: #fff;
+`;
+
+const BtnContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 20px 0px 0px;
+  justify-content: flex-end;
 `;

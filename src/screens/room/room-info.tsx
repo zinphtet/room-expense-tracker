@@ -8,6 +8,7 @@ import RoomMenus from '../../components/room-menus';
 import {useEffect} from 'react';
 import {useRoomStore} from '../../store/room';
 
+import SkeletonContent from 'react-native-skeleton-content';
 const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
   const {isLoading, isError, data} = useGetRoom();
   const setRoom = useRoomStore(state => state.setRoom);
@@ -34,6 +35,9 @@ const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
           </Button>
         </CenterContainer>
       )}
+
+      {isLoading && <Text>Loading Room Info ...</Text>}
+
       {room?.room && (
         <Container vertical={20} horizontal={20} gap={40}>
           {/* <Text>{JSON.stringify(room, null, 2)}</Text> */}

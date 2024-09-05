@@ -12,6 +12,7 @@ type Expense = {
   expense_date: string; // ISO string for date
   created_at: string; // ISO string for date
   category: Category;
+  to_room: boolean;
 };
 
 type ScreenProps = {
@@ -93,6 +94,7 @@ type UpdateMonthType = {
     name?: string;
     description?: string;
     is_calculated?: boolean;
+    is_active?: boolean;
   };
 };
 

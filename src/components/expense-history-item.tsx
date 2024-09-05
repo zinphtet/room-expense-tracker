@@ -1,14 +1,19 @@
-
 import {Text} from 'react-native-paper';
 import styled from 'styled-components/native';
 import {formatDateOne} from '../lib/helper';
 import {FlexCenter, SubTitleText} from '../style';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import theme from '../constants/theme';
 const ExpenseItem: React.FC<Expense> = item => {
   return (
     <ExpenseItemContainer>
       <FlexCenter>
-        <SubTitleText>{item?.category?.name}</SubTitleText>
+        <SubTitleText
+          style={{
+            color: theme.colors.primaryDark,
+          }}>
+          {item?.category?.name || (item.to_room && 'ADDED TO ROOM')}
+        </SubTitleText>
         <SubTitleText>{item.amount} MMK</SubTitleText>
       </FlexCenter>
       <FlexCenter>

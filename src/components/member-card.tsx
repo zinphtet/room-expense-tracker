@@ -117,13 +117,13 @@ const MemberCard: React.FC<Member> = ({name, email, id, room_id}) => {
         <FlexCenter style={{marginTop: 20}}>
           <Text>Your Expense for this Month</Text>
           <TextBold size={16} style={{color: 'red'}}>
-            {formatPrice(memberExpenses[id])}
+            {formatPrice(memberExpenses[id] || 0)}
           </TextBold>
         </FlexCenter>
         <FlexCenter style={{marginTop: 10}}>
           <Text>Differences </Text>
           <TextBold size={16} style={{color: 'red'}}>
-            {formatPrice(eachExpense - memberExpenses[id])}
+            {formatPrice(eachExpense - memberExpenses[id] || 0)}
           </TextBold>
         </FlexCenter>
       </Container>

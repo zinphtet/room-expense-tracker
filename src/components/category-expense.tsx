@@ -1,7 +1,5 @@
 import {FlatList, Text} from 'react-native';
 import {Container, TextBold, TextCenter} from '../style';
-import {useEffect} from 'react';
-import {getCategoryExpense} from '../api';
 import {useGetExpenseByCategory} from '../hooks/useQuery';
 import {View} from 'react-native';
 import styled from 'styled-components/native';
