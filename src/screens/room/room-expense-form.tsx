@@ -45,7 +45,7 @@ const ExpenseForm = ({route, navigation}) => {
     formState: {errors},
   } = useForm<FormData>({
     defaultValues: {
-      amount: isEdit ? expense.amount.toString() : '0',
+      amount: isEdit ? expense.amount.toString() : '',
       description: isEdit ? expense.description : '',
       date: isEdit ? new Date(expense.expense_date) : new Date(),
       categoryId: isEdit ? expense.category?.name : '',

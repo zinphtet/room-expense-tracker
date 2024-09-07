@@ -4,17 +4,20 @@ import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import {Button, TextInput} from 'react-native-paper';
 import {useRoomStore} from '../../store/room';
 import {useMonthStore} from '../../store/month';
-import {useCreateAddToRoom} from '../../hooks/useQuery';
+import {useCreateAddToRoom, useUpdateRoomExpense} from '../../hooks/useQuery';
 import {useToast} from 'react-native-toast-notifications';
 import {useQueryClient} from '@tanstack/react-query';
 import {log} from '../../lib/helper';
+import {screenNames} from '../../constants';
 
 type FormState = {
   amount: string;
   description?: string;
 };
 
-const AddToRoomForm = () => {
+// @ts-ignore
+const AddToRoomForm = ({route, navigation}) => {
+  const expense = route?.params?.expense as ExpenseType;
   const {
     control,
     handleSubmit,
@@ -23,8 +26,8 @@ const AddToRoomForm = () => {
     formState: {errors},
   } = useForm<FormState>({
     defaultValues: {
-      // amount: '0',
-      description: '',
+      amount: expense ? expense.amount.toString() : '',
+      description: expense ? expense.description : '',
     },
   });
   //   data from state
@@ -32,12 +35,36 @@ const AddToRoomForm = () => {
   const queryClient = useQueryClient();
 
   const {isPending, mutate: createAddToRoom} = useCreateAddToRoom();
-
+  const {isPending: isUpdating, mutate: updateExpense} = useUpdateRoomExpense();
   const room = useRoomStore(store => store.room);
   const month = useMonthStore(store => store.month);
   //
   const submitHandler: SubmitHandler<FormState> = data => {
     log(data, 'adding to room money');
+    if (expense) {
+      updateExpense(
+        {
+          amount: parseInt(data.amount),
+          description: data.description,
+          id: expense.id,
+        },
+        {
+          onSuccess: () => {
+            toast.show('Updated successfully', {
+              type: 'success',
+            });
+            queryClient.invalidateQueries();
+            navigation.push(screenNames.expense_list);
+          },
+          onError: () => {
+            toast.show('Error updating ', {
+              type: 'danger',
+            });
+          },
+        },
+      );
+      return;
+    }
     // return;
     createAddToRoom(
       {
@@ -109,9 +136,9 @@ const AddToRoomForm = () => {
         <ButtonContainer>
           <Button
             mode="contained"
-            disabled={isPending}
+            disabled={isPending || isUpdating}
             onPress={handleSubmit(submitHandler)}>
-            Add To Room
+            {expense ? 'Update to Room' : 'Add to Room'}
           </Button>
         </ButtonContainer>
       </Container>

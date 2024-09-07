@@ -37,6 +37,11 @@ const RoomExpenseDetails: React.FC<{
   const hasPermission = user?.user.id === expense.created_user_id;
 
   const editHandler = () => {
+    if (expense.to_room) {
+      // @ts-ignore
+      navigation.push(screenNames.add_to_room, {expense: expense});
+      return;
+    }
     // @ts-ignore
     navigation.push(screenNames.room_expense_form, {expense: expense});
   };
