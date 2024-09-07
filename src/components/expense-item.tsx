@@ -1,6 +1,6 @@
-import {Text, View} from 'react-native';
+import {Text} from 'react-native';
 import styled from 'styled-components/native';
-import {formatPrice, log} from '../lib/helper';
+import {formatPrice} from '../lib/helper';
 import {FlexCenter, FlexRight, TextBold} from '../style';
 import theme from '../constants/theme';
 
@@ -12,12 +12,12 @@ const ExpenseItem: React.FC<any> = data => {
       <FlexCenter>
         <TextBold size={16}>{data?.users?.name}</TextBold>
         <MoneyStyle isRed={data.is_room_money}>
-          {data?.is_room_money ? 'ROOM' : 'OWN'}{' '}
+          {data?.is_room_money ? 'ROOM' : 'OWN'}
         </MoneyStyle>
         <TextBold size={16}>{formatPrice(amount)}</TextBold>
       </FlexCenter>
       <FlexRight>
-        <CateogryText>
+        <CateogryText invert={data?.to_room}>
           {!data?.to_room ? data.category?.name : 'ADDED TO ROOM'}
         </CateogryText>
       </FlexRight>
@@ -37,11 +37,16 @@ const ExpenseItemContainer = styled.View`
   gap: 10px;
 `;
 
-const CateogryText = styled.Text`
+type CategoryTextProps = {
+  invert?: boolean;
+};
+const CateogryText = styled.Text<CategoryTextProps>`
   width: max-content;
   border: 2px solid ${theme.colors.primary};
+  background-color: ${props => props.invert && theme.colors.primaryDark};
+  color: ${props => props.invert && '#fff'};
   /* background-color: red; */
-  padding: 2px 15px 2px;
+  padding: 3px 15px 0px;
   border-radius: 10px;
 `;
 

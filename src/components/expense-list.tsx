@@ -26,6 +26,9 @@ const ExpenseList: React.FC<ScreenProps> = ({navigation}) => {
       <Container gap={10}>
         {isLoading && <Text>Loading...</Text>}
         {/* <ScrollView> */}
+        {!isLoading && data?.data?.length === 0 && (
+          <Text>No Expenes Found</Text>
+        )}
         <FlatList
           data={data?.data || []}
           showsVerticalScrollIndicator={false}

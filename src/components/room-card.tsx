@@ -24,7 +24,12 @@ const RoomCard: React.FC<RoomType> = room => {
   const totalExpenses = expenses?.data
     ?.filter(exp => exp.to_room === false)
     .reduce((acc, exp) => acc + parseInt(exp.amount), 0);
-  log(totalExpenses, 'total expense');
+  const roomMoneyExpenses = expenses?.data
+    ?.filter(exp => exp.to_room !== true && exp.is_room_money === true)
+    .reduce((accum, exp) => {
+      return accum + parseInt(exp.amount);
+    }, 0);
+  const roomLeftMoney = collectedMoney! - roomMoneyExpenses!;
   return (
     <CardContainer>
       <RoomName>{room?.room?.name}</RoomName>
@@ -38,6 +43,10 @@ const RoomCard: React.FC<RoomType> = room => {
           <Money> {formatPrice(totalExpenses!)}</Money>
         </FlexCenter>
         <FlexCenter>
+          <AntDesign name="creditcard" size={25} color={'#fff'} />
+          <Money> {formatPrice(roomLeftMoney!)}</Money>
+        </FlexCenter>
+        <FlexCenter>
           <MaterialCommunity
             name="calendar-month-outline"
             size={30}
@@ -45,6 +54,7 @@ const RoomCard: React.FC<RoomType> = room => {
           />
           <Money>{month?.name}</Money>
         </FlexCenter>
+        {/* approximately-equal */}
       </RoomInfo>
     </CardContainer>
   );

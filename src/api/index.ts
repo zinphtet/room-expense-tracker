@@ -4,8 +4,6 @@ import {supabase} from '../lib/supabase';
 const RecentHistoryLimit = 5;
 
 export const getRecentExpenes = async (userId: string) => {
-  console.log('userid', userId);
-
   try {
     let {error, data} = await supabase
       .from('expense')

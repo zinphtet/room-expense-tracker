@@ -78,8 +78,7 @@ const MemberCard: React.FC<Member> = ({name, email, id, room_id}) => {
     });
   });
 
-  const eachExpense = ownMoney! + collectedMoney!;
-  log(filterRoomExpenses, 'filtered Room expenses');
+  const memberRoomExpense = ownMoney! + collectedMoney!;
   return (
     <CardWrapper>
       <FlexCenter>
@@ -112,7 +111,7 @@ const MemberCard: React.FC<Member> = ({name, email, id, room_id}) => {
         </FlexCenter>
         <Underline></Underline>
         <FlexRight>
-          <TextBold size={16}>{formatPrice(eachExpense)}</TextBold>
+          <TextBold size={16}>{formatPrice(memberRoomExpense)}</TextBold>
         </FlexRight>
         <FlexCenter style={{marginTop: 20}}>
           <Text>Your Expense for this Month</Text>
@@ -123,7 +122,7 @@ const MemberCard: React.FC<Member> = ({name, email, id, room_id}) => {
         <FlexCenter style={{marginTop: 10}}>
           <Text>Differences </Text>
           <TextBold size={16} style={{color: 'red'}}>
-            {formatPrice(eachExpense - memberExpenses[id] || 0)}
+            {formatPrice(memberRoomExpense - memberExpenses[id] || 0)}
           </TextBold>
         </FlexCenter>
       </Container>
