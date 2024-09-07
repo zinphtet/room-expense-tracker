@@ -162,13 +162,6 @@ const ExpenseForm = ({route, navigation}) => {
           toast.show('Update Success', {
             type: 'success',
           });
-          // reset();
-          // setValue('amount', '');
-          // setValue('description', '');
-          // setValue('categoryId', '');
-          // setValue('date', new Date());
-          // setValue('memberIds', '');
-          // setValue('room_money', '');
           queryClient.invalidateQueries();
           navigation.push(screenNames.expense_list);
         },

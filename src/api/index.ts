@@ -41,32 +41,33 @@ export const updateUserInfo = async ({
     .from('auth.users') // 'users' is your custom table, not auth.users
     .update(updateObj)
     .eq('id', userId);
+  if (error) {
+    throw new Error('Error updating User Information');
+  }
 
   return {data, error};
 };
 
 export const addMemberToRoom = async (inputObj: AddMemberInputType) => {
-  // const {data, error} = await supabase
-  //   .from('roomMembers')
-  //   .insert([inputObj])
-  //   .select('*');
   const {data, error} = await supabase
     .from('users')
     .update({room_id: inputObj.room_id})
     .eq('id', inputObj.user_id)
     .select('*');
+  if (error) {
+    throw new Error('Error adding member to Room');
+  }
   return {data, error};
 };
 
 export const getRoom = async (userId: string) => {
-  // let {data, error} = await supabase
-  //   .from('roomMembers')
-  //   .select(`id,room(*)`)
-  //   .eq('user_id', userId);
   let {data, error} = await supabase
     .from('users')
     .select(`id,room(*)`)
     .eq('id', userId);
+  if (error) {
+    throw new Error('Error getting room');
+  }
   return {data, error};
 };
 
@@ -75,6 +76,9 @@ export const getCategoriesByRoomId = async (roomId: string) => {
     .from('category')
     .select('id,name,created_user_id')
     .eq('room_id', roomId);
+  if (error) {
+    throw new Error('Error getting categories by room id');
+  }
   return {data, error};
 };
 
@@ -83,6 +87,9 @@ export const createCategory = async (inputObj: CreateCategroyInputType) => {
     .from('category')
     .insert([{name: inputObj.name, room_id: inputObj.roomId}])
     .select('id,name,created_user_id');
+  if (error) {
+    throw new Error('Error creating category');
+  }
 
   return {data, error};
 };
@@ -98,9 +105,12 @@ export const deleteCategory = async (id: string) => {
 export const updateCategory = async (inputObj: UpdateCategoryInputType) => {
   const {data, error} = await supabase
     .from('category')
-    .update({name: inputObj.name})
+    .update({name: inputObj.name, updated_at: new Date()})
     .eq('id', inputObj.id)
     .select();
+  if (error) {
+    throw new Error('Error updating Category');
+  }
 
   return {data, error};
 };
@@ -110,12 +120,18 @@ export const getMembersByRoomId = async (id: string) => {
     .from('users')
     .select('*')
     .eq('room_id', id);
+  if (error) {
+    throw new Error('Error updating members by room id');
+  }
 
   return {data, error};
 };
 
 export const getUsersById = async (ids: string[]) => {
   const {data, error} = await supabase.from('users').select('*').in('id', ids);
+  if (error) {
+    throw new Error('Error getting user by Id');
+  }
   return {data, error};
 };
 
@@ -124,6 +140,9 @@ export const searchUsersByName = async (name: string) => {
     .from('users')
     .select(`*`)
     .ilike('name', `%${name}%`);
+  if (error) {
+    throw new Error('Error searching users by name');
+  }
   return {data, error};
 };
 
@@ -133,6 +152,9 @@ export const removeUserFromRoom = async (userId: string) => {
     .update({room_id: null})
     .eq('id', userId)
     .select();
+  if (error) {
+    throw new Error('Error  removing user from room');
+  }
   return {data, error};
 };
 
@@ -148,9 +170,13 @@ export const createMonth = async (createObj: CreateMonthType) => {
 export const updateMonth = async (updateObj: UpdateMonthType) => {
   const {data, error} = await supabase
     .from('month')
-    .update(updateObj.data)
+    .update({...updateObj.data, updated_at: new Date()})
     .eq('id', updateObj.id)
     .select();
+
+  if (error) {
+    throw new Error('Error updating month');
+  }
 
   return {data, error};
 };
@@ -158,6 +184,9 @@ export const updateMonth = async (updateObj: UpdateMonthType) => {
 export const deleteMonth = async (id: string) => {
   const {error} = await supabase.from('month').delete().eq('id', id);
 
+  if (error) {
+    throw new Error('Error deleting month');
+  }
   return {error};
 };
 
@@ -167,7 +196,9 @@ export const getMonthsByRoom = async (roomId: string) => {
     .select('*')
     .eq('room_id', roomId)
     .order('updated_at', {ascending: false});
-
+  if (error) {
+    throw new Error('Error getting months by room');
+  }
   return {data, error};
 };
 
@@ -177,6 +208,9 @@ export const getActiveMonth = async () => {
     .select('*')
     .eq('is_active', true)
     .eq('is_current', true);
+  if (error) {
+    throw new Error('Error getting active month');
+  }
   return {data, error};
 };
 
