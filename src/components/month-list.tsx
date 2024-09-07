@@ -19,10 +19,11 @@ import {Button} from 'react-native-paper';
 import {useMonthStore} from '../store/month';
 
 const MonthItem: React.FC<MonthType> = month => {
-  const {name, id} = month;
+  const {name, id, is_active} = month;
   const {isError, isPending, mutate: deleteCategory} = useDeleteMonth();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const setCurrentMonth = useMonthStore(store => store.setMonth);
+  const currentMonth = useMonthStore(store => store.month);
   const queryClient = useQueryClient();
   const toast = useToast();
   const isLoading = isPending;
@@ -64,6 +65,7 @@ const MonthItem: React.FC<MonthType> = month => {
       />
       <FlexCenter>
         <Text>{name}</Text>
+        {is_active && <Button mode="contained">Active </Button>}
         <FlexCenter gap={20}>
           <MonthForm
             key={name}
@@ -80,10 +82,18 @@ const MonthItem: React.FC<MonthType> = month => {
         </FlexCenter>
       </FlexCenter>
       <BtnContainer>
-        <Button mode="outlined" onPress={() => setCurrentMonthHandler(month)}>
-          Set Current
-        </Button>
-        <Button mode="contained">Active </Button>
+        {id !== currentMonth?.id && (
+          <Button mode="outlined" onPress={() => setCurrentMonthHandler(month)}>
+            Set Current
+          </Button>
+        )}
+        {id === currentMonth?.id && (
+          <Button
+            mode="contained"
+            onPress={() => setCurrentMonthHandler(month)}>
+            Current
+          </Button>
+        )}
       </BtnContainer>
     </MonthItemContainer>
   );

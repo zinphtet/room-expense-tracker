@@ -33,6 +33,7 @@ const SignUpScreen = ({navigation}) => {
   }, [username, email, password, usernameValid, emailValid, passwordValid]);
 
   const signUpWithEmail = async () => {
+    setIsLoading(true);
     try {
       const {
         data: {session},

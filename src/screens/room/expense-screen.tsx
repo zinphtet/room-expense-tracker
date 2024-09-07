@@ -8,7 +8,7 @@ const ExpenseScreen: React.FC<ScreenProps> = ({navigation}) => {
   return (
     <Container horizontal={20} vertical={20}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <Container gap={20}>
+        <Container gap={10}>
           <CategoryExpense />
           <ExpenseList navigation={navigation} />
         </Container>

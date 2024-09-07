@@ -246,3 +246,10 @@ export const addToRoomMoney = async (createObj: AddRoomMoneyType) => {
   }
   return {data};
 };
+
+export const deleteExepnseById = async (id: string) => {
+  const {error} = await supabase.from('expense').delete().eq('id', id);
+  if (error) {
+    throw new Error('Error deleting expense');
+  }
+};

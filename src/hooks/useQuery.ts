@@ -8,6 +8,7 @@ import {
   createMonth,
   createNewRoom,
   deleteCategory,
+  deleteExepnseById,
   deleteMonth,
   getActiveMonth,
   getAllExpenses,
@@ -35,7 +36,7 @@ export const useGetRecentExpenses = () => {
   const userId = user?.user.id!;
 
   const {isError, data, isLoading} = useQuery({
-    queryKey: [keys.recent_expenses],
+    queryKey: [keys.recent_expenses, `${userId}`],
     queryFn: () => getRecentExpenes(userId),
   });
 
@@ -203,4 +204,11 @@ export const useCreateAddToRoom = () => {
     mutationFn: addToRoomMoney,
   });
   return {isError, isPending, mutate};
+};
+
+export const useDeleteExpense = () => {
+  const {isPending, mutate} = useMutation({
+    mutationFn: deleteExepnseById,
+  });
+  return {mutate, isPending};
 };

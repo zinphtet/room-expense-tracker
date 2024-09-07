@@ -7,11 +7,11 @@ import RoomCard from '../../components/room-card';
 import RoomMenus from '../../components/room-menus';
 import {useEffect} from 'react';
 import {useRoomStore} from '../../store/room';
-
-import SkeletonContent from 'react-native-skeleton-content';
+import {useMonthStore} from '../../store/month';
 const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
   const {isLoading, isError, data} = useGetRoom();
   const setRoom = useRoomStore(state => state.setRoom);
+  const month = useMonthStore(store => store.month);
   const createNewRoomHandler = () => {
     navigation.push(screenNames.create_new_room);
   };
@@ -45,10 +45,18 @@ const RoomInfoScreen: React.FC<ScreenProps> = ({navigation}) => {
           <RoomCard {...room} />
           <RoomMenus navigation={navigation} />
           <ButtonContainer>
-            <Button icon={'plus'} mode="contained" onPress={routeToAddRoom}>
+            <Button
+              icon={'plus'}
+              mode="contained"
+              disabled={!month?.is_active}
+              onPress={routeToAddRoom}>
               Add to Room
             </Button>
-            <Button icon={'plus'} mode="contained" onPress={routeToAddExpense}>
+            <Button
+              icon={'plus'}
+              mode="contained"
+              disabled={!month?.is_active}
+              onPress={routeToAddExpense}>
               Add Expense
             </Button>
           </ButtonContainer>

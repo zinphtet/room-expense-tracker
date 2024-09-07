@@ -18,8 +18,15 @@ const AddToRoomForm = () => {
   const {
     control,
     handleSubmit,
+    reset,
+    setValue,
     formState: {errors},
-  } = useForm<FormState>();
+  } = useForm<FormState>({
+    defaultValues: {
+      // amount: '0',
+      description: '',
+    },
+  });
   //   data from state
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -44,6 +51,8 @@ const AddToRoomForm = () => {
           toast.show('Add money to room successfully', {
             type: 'success',
           });
+          setValue('amount', '');
+          setValue('description', '');
           queryClient.invalidateQueries();
         },
         onError: () => {

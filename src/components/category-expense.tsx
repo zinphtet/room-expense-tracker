@@ -16,18 +16,21 @@ const CategoryExpense = () => {
         </View>
       )}
       {!isLoading && (
-        <FlatList
-          data={data?.keys}
-          showsHorizontalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={{width: 20}}></View>}
-          horizontal={true}
-          keyExtractor={item => item}
-          renderItem={({index, item}: {index: number; item: string}) => {
-            return (
-              <CategoryExpenseCard data={data?.expenseByCategoryId[item]} />
-            );
-          }}
-        />
+        <>
+          {data?.keys.length === 0 && <Text>No Expenses Found</Text>}
+          <FlatList
+            data={data?.keys}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={{width: 20}}></View>}
+            horizontal={true}
+            keyExtractor={item => item}
+            renderItem={({index, item}: {index: number; item: string}) => {
+              return (
+                <CategoryExpenseCard data={data?.expenseByCategoryId[item]} />
+              );
+            }}
+          />
+        </>
       )}
 
       {/* <Text>Hello this is category expense</Text> */}

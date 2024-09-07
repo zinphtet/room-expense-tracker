@@ -12,7 +12,7 @@ const BalanceCard = () => {
       <Card.Content>
         <TotalBalanceRow>
           <WhiteText variant="titleLarge">Total Expense</WhiteText>
-          <WhiteText variant="headlineLarge">2,548.00 MMK</WhiteText>
+          <WhiteText variant="headlineLarge">X X X X MMK</WhiteText>
         </TotalBalanceRow>
         <Divider />
         <IncomeExpenseRow>
@@ -23,8 +23,8 @@ const BalanceCard = () => {
             </WhiteText>
           </IncomeColumn>
           <ExpenseColumn>
-            <WhiteText variant="labelLarge">Limit</WhiteText>
-            <WhiteText variant="titleLarge">{date.getUTCMonth()}</WhiteText>
+            <WhiteText variant="labelLarge">X X X</WhiteText>
+            <WhiteText variant="titleLarge">X X X</WhiteText>
           </ExpenseColumn>
         </IncomeExpenseRow>
       </Card.Content>

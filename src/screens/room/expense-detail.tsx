@@ -1,12 +1,16 @@
 import {ScrollView, Text, View} from 'react-native';
 import {Container, FlexCenter, FlexRight, TextBold} from '../../style';
 import {formatPrice, log} from '../../lib/helper';
-import {useGetUserById} from '../../hooks/useQuery';
+import {useDeleteExpense, useGetUserById} from '../../hooks/useQuery';
 import styled from 'styled-components/native';
 import theme from '../../constants/theme';
 import {Button} from 'react-native-paper';
 import {useUserStore} from '../../store/user';
-
+import {useToast} from 'react-native-toast-notifications';
+import {useState} from 'react';
+import ConfirmDialog from '../../components/confirm-modal';
+import {useQueryClient} from '@tanstack/react-query';
+import {useNavigation} from '@react-navigation/native';
 const RoomExpenseDetails: React.FC<{
   route: {params: {expense: ExpenseType}};
 }> = ({route}) => {
@@ -18,14 +22,45 @@ const RoomExpenseDetails: React.FC<{
     isError,
     isLoading: isLoadingMembers,
   } = useGetUserById(memberIds);
+  const {mutate: deleteExepenseById, isPending: isDeletingExpense} =
+    useDeleteExpense();
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [showModal, setShowModal] = useState(false);
+  const navigation = useNavigation();
   const expenseDate = new Date(expense.expense_date);
   const createdDate = new Date(expense.created_at);
   const user = useUserStore(store => store.user);
 
   const hasPermission = user?.user.id === expense.created_user_id;
+
+  const onDeleteHandler = () => {
+    deleteExepenseById(expense.id, {
+      onSuccess: () => {
+        toast.show('Successfully deleted', {
+          type: 'success',
+        });
+        setShowModal(false);
+        queryClient.invalidateQueries();
+        navigation.goBack();
+      },
+      onError: () => {
+        toast.show('Error deleting expense', {
+          type: 'danger',
+        });
+      },
+    });
+  };
   return (
     <ScrollView>
       <Container vertical={20} horizontal={20} gap={40}>
+        <ConfirmDialog
+          asyncFn={onDeleteHandler}
+          closeFn={() => setShowModal(false)}
+          isLoading={isDeletingExpense}
+          show={showModal}
+          key={expense.id}
+        />
         <FlexCenter>
           <CategoryText>
             {!expense.to_room ? expense.category?.name : 'ADDED TO ROOM'}
@@ -74,7 +109,9 @@ const RoomExpenseDetails: React.FC<{
         </Container>
         {hasPermission && (
           <FlexRightCenter>
-            <Button mode="contained-tonal">Delete</Button>
+            <Button mode="contained-tonal" onPress={() => setShowModal(true)}>
+              Delete
+            </Button>
             <Button mode="contained">Edit</Button>
           </FlexRightCenter>
         )}

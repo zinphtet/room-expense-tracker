@@ -24,6 +24,7 @@ const LoginScreen = ({navigation}) => {
   const handleLogin = async () => {
     console.log('Email:', email);
     console.log('Password:', password);
+    setIsLoading(true);
     try {
       const {error} = await supabase.auth.signInWithPassword({
         email: email,
@@ -83,7 +84,7 @@ const LoginScreen = ({navigation}) => {
       <StyledButton
         mode="contained"
         onPress={handleLogin}
-        disabled={!emailValid || !passwordValid}>
+        disabled={!emailValid || !passwordValid || isLoading}>
         Login
       </StyledButton>
 
