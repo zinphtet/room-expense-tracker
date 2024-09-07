@@ -10,6 +10,7 @@ import {
   useCreateRoomExpense,
   useGetCategoriesByRoom,
   useGetMembersByRoom,
+  useUpdateRoomExpense,
 } from '../../hooks/useQuery';
 import {log} from '../../lib/helper';
 import {useQueryClient} from '@tanstack/react-query';
@@ -17,6 +18,8 @@ import {useRoomStore} from '../../store/room';
 import {useMonthStore} from '../../store/month';
 import {useToast} from 'react-native-toast-notifications';
 import {enGB, registerTranslation} from 'react-native-paper-dates';
+import {screenNames} from '../../constants';
+
 registerTranslation('en-GB', enGB);
 type FormData = {
   categoryId: string;
@@ -27,7 +30,12 @@ type FormData = {
   date: Date | undefined;
 };
 
-const ExpenseForm = () => {
+// @ts-ignore
+const ExpenseForm = ({route, navigation}) => {
+  const expense = route?.params?.expense as ExpenseType;
+  log(expense, 'Edit Expense');
+
+  const isEdit = expense ? true : false;
   const {
     control,
     watch,
@@ -35,13 +43,28 @@ const ExpenseForm = () => {
     reset,
     setValue,
     formState: {errors},
-  } = useForm<FormData>();
+  } = useForm<FormData>({
+    defaultValues: {
+      amount: isEdit ? expense.amount.toString() : '0',
+      description: isEdit ? expense.description : '',
+      date: isEdit ? new Date(expense.expense_date) : new Date(),
+      categoryId: isEdit ? expense.category?.name : '',
+      room_money: isEdit
+        ? expense.is_room_money
+          ? 'Room Money'
+          : 'Own Money'
+        : '',
+    },
+  });
 
   const {
     isError: isErrorCreatingExpense,
     isPending: isCreatingExpense,
     mutate: createRoomExpense,
   } = useCreateRoomExpense();
+
+  const {isPending: isUpdatingExpense, mutate: updateExpense} =
+    useUpdateRoomExpense();
   const toast = useToast();
   // GET local data
   const room = useRoomStore(state => state.room?.room);
@@ -76,7 +99,14 @@ const ExpenseForm = () => {
         value: 'Own Money',
       },
     ],
-    selectedList: [],
+    selectedList: isEdit
+      ? [
+          {
+            _id: expense.is_room_money ? '1' : '2',
+            value: expense.is_room_money ? 'Room Money' : 'Own Money',
+          },
+        ]
+      : [],
     error: '',
   });
 
@@ -121,6 +151,35 @@ const ExpenseForm = () => {
       member_ids: JSON.stringify(membersIdArr),
     };
     log(createObj, 'created Object');
+    if (isEdit) {
+      log(createObj, 'Update Objeect');
+      const updateObj = {
+        ...createObj,
+        id: expense.id,
+      };
+      updateExpense(updateObj, {
+        onSuccess: () => {
+          toast.show('Update Success', {
+            type: 'success',
+          });
+          // reset();
+          // setValue('amount', '');
+          // setValue('description', '');
+          // setValue('categoryId', '');
+          // setValue('date', new Date());
+          // setValue('memberIds', '');
+          // setValue('room_money', '');
+          queryClient.invalidateQueries();
+          navigation.push(screenNames.expense_list);
+        },
+        onError: () => {
+          toast.show('Update Expense Error', {
+            type: 'danger',
+          });
+        },
+      });
+      return;
+    }
     createRoomExpense(createObj, {
       onSuccess: () => {
         toast.show('Successfully created', {
@@ -148,17 +207,52 @@ const ExpenseForm = () => {
         list: memberList,
       }));
     }
-  }, [memberList]);
+    if (isEdit) {
+      const selectedList = [] as never[];
+      const incomingArr = JSON.parse(expense.member_ids) as string[];
+      incomingArr.forEach(id => {
+        const member = memberList.find(mem => mem._id === id);
+        if (member) {
+          // @ts-ignore
+          selectedList.push(member);
+        }
+      });
+      // @ts-ignore
+      const selectedNames = selectedList.map(mem => mem?.value);
+      log(selectedNames, 'my selected List');
+      setMemberIds(prev => {
+        return {
+          ...prev,
+          selectedList: selectedList as unknown as never[],
+        };
+      });
+      console.log('SET MEMBERS IDS');
+    }
+  }, [memberList, isEdit]);
 
   useEffect(() => {
+    if (isEdit) {
+      setCategoriesList(prev => ({
+        ...prev,
+        value: expense.category?.name || '',
+        selectedList: [
+          {
+            _id: expense.category_id,
+            value: expense.category?.name,
+          },
+        ] as never[],
+      }));
+    }
     if (listCategory) {
       setCategoriesList(prevState => ({
         ...prevState,
         list: listCategory,
       }));
     }
-  }, [listCategory]);
-
+  }, [listCategory, isEdit]);
+  log(memberIds, 'MembersIds  .....');
+  // @ts-ignore
+  const selectedNames = memberIds.selectedList.map(mem => mem.value).join(',');
   return (
     <ScrollView>
       <Container horizontal={20} vertical={20}>
@@ -291,7 +385,7 @@ const ExpenseForm = () => {
               return (
                 <PaperSelect
                   label="Select Members"
-                  value={field.value}
+                  value={field.value || selectedNames}
                   onSelection={(value: any) => {
                     field.onChange(value.text);
                     setMemberIds({
@@ -371,9 +465,9 @@ const ExpenseForm = () => {
         <ButtonContainer>
           <Button
             mode="contained"
-            disabled={isCreatingExpense}
+            disabled={isCreatingExpense || isUpdatingExpense}
             onPress={handleSubmit(submitHandler)}>
-            Add Expense
+            {isEdit ? 'Update Expense' : ' Add Expense'}
           </Button>
         </ButtonContainer>
       </Container>

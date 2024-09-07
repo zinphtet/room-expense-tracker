@@ -22,6 +22,7 @@ import {
   removeUserFromRoom,
   updateCategory,
   updateMonth,
+  updateRoomExpense,
   updateUserInfo,
 } from '../api';
 import {useUserStore} from '../store/user';
@@ -211,4 +212,11 @@ export const useDeleteExpense = () => {
     mutationFn: deleteExepnseById,
   });
   return {mutate, isPending};
+};
+
+export const useUpdateRoomExpense = () => {
+  const {isPending, mutate} = useMutation({
+    mutationFn: updateRoomExpense,
+  });
+  return {isPending, mutate};
 };

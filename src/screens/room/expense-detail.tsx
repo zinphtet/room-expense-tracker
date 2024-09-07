@@ -11,8 +11,10 @@ import {useState} from 'react';
 import ConfirmDialog from '../../components/confirm-modal';
 import {useQueryClient} from '@tanstack/react-query';
 import {useNavigation} from '@react-navigation/native';
+import {screenNames} from '../../constants';
 const RoomExpenseDetails: React.FC<{
   route: {params: {expense: ExpenseType}};
+  navigation: any;
 }> = ({route}) => {
   const {expense} = route.params;
   log(expense, 'expenseDetails');
@@ -34,6 +36,10 @@ const RoomExpenseDetails: React.FC<{
 
   const hasPermission = user?.user.id === expense.created_user_id;
 
+  const editHandler = () => {
+    // @ts-ignore
+    navigation.push(screenNames.room_expense_form, {expense: expense});
+  };
   const onDeleteHandler = () => {
     deleteExepenseById(expense.id, {
       onSuccess: () => {
@@ -112,7 +118,9 @@ const RoomExpenseDetails: React.FC<{
             <Button mode="contained-tonal" onPress={() => setShowModal(true)}>
               Delete
             </Button>
-            <Button mode="contained">Edit</Button>
+            <Button mode="contained" onPress={editHandler}>
+              Edit
+            </Button>
           </FlexRightCenter>
         )}
       </Container>

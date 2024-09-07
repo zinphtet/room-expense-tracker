@@ -160,3 +160,15 @@ interface AddRoomMoneyType {
   month_id: string;
   description?: string;
 }
+
+type UpdateRoomExpenseType = {
+  amount: number;
+  description: string;
+  category_id: string;
+  room_id: string;
+  expense_date: string;
+  is_room_money: boolean;
+  month_id: string;
+  member_ids: string;
+  id: string;
+};

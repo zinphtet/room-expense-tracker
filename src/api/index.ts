@@ -191,12 +191,24 @@ export const addRoomExpense = async (createObj: CreateRoomExpenseType) => {
   }
   return {data};
 };
+export const updateRoomExpense = async (updateObj: UpdateRoomExpenseType) => {
+  const {id, ...rest} = updateObj;
+  const {data, error} = await supabase
+    .from('expense')
+    .update({...rest, updated_at: new Date()})
+    .eq('id', id)
+    .select();
+
+  if (error) {
+    throw new Error('Error updating Expense');
+  }
+};
 
 export const getAllExpenses = async (roomId: string, monthId: string) => {
   let {data, error} = await supabase
     .from('expense')
     .select(
-      'id,created_at,expense_date,amount,created_user_id,to_room,category(name),description,is_room_money,member_ids,users(name)',
+      'id,created_at,expense_date,amount,created_user_id,to_room,category_id,category(name),description,is_room_money,member_ids,users(name)',
     )
     .eq('room_id', roomId)
     .eq('month_id', monthId)

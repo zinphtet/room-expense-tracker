@@ -17,9 +17,9 @@ const Menus = [
     name: 'shield-moon-outline',
     to: screenNames.month,
   },
-  {
-    name: 'speaker-wireless',
-  },
+  // {
+  //   name: 'speaker-wireless',
+  // },
 
   {
     name: 'card-plus-outline',
